@@ -1,0 +1,10 @@
+{
+    "identity": {
+        "dataDirectory": "data-0",
+        "initializing": true
+    },
+    "ui": {
+        "combinedChatWindow": true,
+        "language": ""
+    }
+}

@@ -1,0 +1,116 @@
+executing config test sanitize-ubsan
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize-ubsan && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize-ubsan
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize-ubsan && MAKEFLAGS= make
+> g++ -c -pipe -fsanitize=undefined -fsanitize=integer-divide-by-zero -fsanitize=bounds -fsanitize=alignment -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize-recover -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fsanitize=undefined -fsanitize=integer-divide-by-zero -fsanitize=bounds -fsanitize=alignment -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize-recover -Wl,-O1 -o sanitize-ubsan test.o    
+test sanitize-ubsan succeeded
+executing config test sanitize-ubsan-more
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize-ubsan-more && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize-ubsan-more
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize-ubsan-more && MAKEFLAGS= make
+> g++ -c -pipe -fsanitize=vptr -fsanitize=object-size -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fsanitize=vptr -fsanitize=object-size -Wl,-O1 -o sanitize-ubsan-more test.o    
+test sanitize-ubsan-more succeeded
+executing config test vtable-verify
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/vtable-verify && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/vtable-verify
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/vtable-verify && MAKEFLAGS= make
+> g++ -c -pipe -fvtable-verify=std -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fvtable-verify=std -Wl,-O1 -o vtable-verify test.o    
+> g++: error: -fvtable-verify=std is not supported in this configuration
+> Makefile:67: recipe for target 'vtable-verify' failed
+> make: *** [vtable-verify] Error 1
+test vtable-verify FAILED
+executing config test stack-protector-strong
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/stack-protector-strong && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/stack-protector-strong
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/stack-protector-strong && MAKEFLAGS= make
+> g++ -c -pipe -fstack-protector-strong -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fstack-protector-strong -Wl,-O1 -o stack-protector-strong test.o    
+test stack-protector-strong succeeded
+executing config test sanitize
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize
++ cd /home/arufu/code/cpp/ricochetv3/ricochet-refresh/config.tests/sanitize && MAKEFLAGS= make
+> g++ -c -pipe -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -Wl,-O1 -o sanitize test.o    
+test sanitize succeeded
+executing config test sanitize-ubsan
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan && MAKEFLAGS= make distclean
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan'
+> /usr/lib/qt5/bin/qmake -o Makefile sanitize-ubsan.pro -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ 'CONFIG -= qt debug_and_release app_bundle lib_bundle'
+> rm -f test.o
+> rm -f *~ core *.core
+> rm -f sanitize-ubsan 
+> rm -f Makefile
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan'
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan && MAKEFLAGS= make
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan'
+> g++ -c -pipe -fsanitize=undefined -fsanitize=integer-divide-by-zero -fsanitize=bounds -fsanitize=alignment -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize-recover -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fsanitize=undefined -fsanitize=integer-divide-by-zero -fsanitize=bounds -fsanitize=alignment -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize-recover -Wl,-O1 -o sanitize-ubsan test.o    
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan'
+test sanitize-ubsan succeeded
+executing config test sanitize-ubsan-more
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more && MAKEFLAGS= make distclean
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more'
+> /usr/lib/qt5/bin/qmake -o Makefile sanitize-ubsan-more.pro -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ 'CONFIG -= qt debug_and_release app_bundle lib_bundle'
+> rm -f test.o
+> rm -f *~ core *.core
+> rm -f sanitize-ubsan-more 
+> rm -f Makefile
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more'
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more && MAKEFLAGS= make
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more'
+> g++ -c -pipe -fsanitize=vptr -fsanitize=object-size -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fsanitize=vptr -fsanitize=object-size -Wl,-O1 -o sanitize-ubsan-more test.o    
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize-ubsan-more'
+test sanitize-ubsan-more succeeded
+executing config test vtable-verify
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify && MAKEFLAGS= make distclean
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify'
+> /usr/lib/qt5/bin/qmake -o Makefile vtable-verify.pro -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ 'CONFIG -= qt debug_and_release app_bundle lib_bundle'
+> rm -f test.o
+> rm -f *~ core *.core
+> rm -f vtable-verify 
+> rm -f Makefile
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify'
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify && MAKEFLAGS= make
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify'
+> g++ -c -pipe -fvtable-verify=std -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fvtable-verify=std -Wl,-O1 -o vtable-verify test.o    
+> g++: error: -fvtable-verify=std is not supported in this configuration
+> Makefile:67: recipe for target 'vtable-verify' failed
+> make[1]: *** [vtable-verify] Error 1
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/vtable-verify'
+test vtable-verify FAILED
+executing config test stack-protector-strong
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong && MAKEFLAGS= make distclean
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong'
+> /usr/lib/qt5/bin/qmake -o Makefile stack-protector-strong.pro -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ 'CONFIG -= qt debug_and_release app_bundle lib_bundle'
+> rm -f test.o
+> rm -f *~ core *.core
+> rm -f stack-protector-strong 
+> rm -f Makefile
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong'
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong && MAKEFLAGS= make
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong'
+> g++ -c -pipe -fstack-protector-strong -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -fstack-protector-strong -Wl,-O1 -o stack-protector-strong test.o    
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/stack-protector-strong'
+test stack-protector-strong succeeded
+executing config test sanitize
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize && MAKEFLAGS= make distclean
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize'
+> /usr/lib/qt5/bin/qmake -o Makefile sanitize.pro -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ 'CONFIG -= qt debug_and_release app_bundle lib_bundle'
+> rm -f test.o
+> rm -f *~ core *.core
+> rm -f sanitize 
+> rm -f Makefile
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize'
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize && /usr/lib/qt5/bin/qmake  -spec /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ "CONFIG -= qt debug_and_release app_bundle lib_bundle" /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize
++ cd /home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize && MAKEFLAGS= make
+> make[1]: Entering directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize'
+> g++ -c -pipe -O2 -Wall -W -fPIC  -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -o test.o test.cpp
+> g++ -Wl,-O1 -o sanitize test.o    
+> make[1]: Leaving directory '/home/arufu/code/cpp/eResearch/ricochet-refresh/config.tests/sanitize'
+test sanitize succeeded
