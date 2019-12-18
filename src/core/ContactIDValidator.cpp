@@ -32,6 +32,7 @@
 
 #include "ContactIDValidator.h"
 
+// 2-7, not 0-9, as base32 only contains A-Z 2-7
 static QRegularExpression regex(QStringLiteral("(torsion|ricochet):([a-z2-7]{16})"));
 
 ContactIDValidator::ContactIDValidator(QObject *parent)

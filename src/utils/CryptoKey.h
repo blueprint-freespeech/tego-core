@@ -40,27 +40,62 @@
 class CryptoKey
 {
 public:
+    // lengths for v3 keys and serviceID
+    // note, these lengths are based on the encoded string returned by Tor service:
+    //  serviceID and public key: base32 encoded
+    //  private key: base64 encoded secret scalar + PRF secret (not ed25519 seed)
+    static const int V3ServiceIDLength = 56;
+    static const int V3PrivateKeyLength = 88;
+    static const int V3PublicKeyLength = 52;
+
+    static const int V3PrivateKeyByteLength = 64;
+    static const int V3PublicKeyByteLength = 32;
+
+
     enum KeyType {
         PrivateKey,
-        PublicKey
+        PublicKey,
+        V3PrivateKey,
+        V3ServiceID,
     };
 
+    // V3 keys can be encoded in either base32 (public key/service id) or base64 (private key hash)
+    // should call isPrivate() or isV3serviceID() to check
     enum KeyFormat {
         PEM,
-        DER
+        DER,
+        V3ENCODED,
     };
 
-    CryptoKey();
-    CryptoKey(const CryptoKey &other) : d(other.d) { }
+    // the version of the onion service used, since v2 and v3 have totally different types of keys
+    enum Version {
+        V2,
+        V3,
+        INVALID,
+    };
+
+    CryptoKey() {version = INVALID;};
+
+    explicit CryptoKey(const CryptoKey::Version version) : version(version) {
+        v3privateKey = "";
+        v3serviceID = "";
+    };
+    CryptoKey(const CryptoKey &other) : d(other.d), version(other.version),
+                                        v3privateKey(other.v3privateKey), v3serviceID(other.v3serviceID){ };
     ~CryptoKey();
 
     bool loadFromData(const QByteArray &data, KeyType type, KeyFormat format = PEM);
+    bool loadFromDataV3(const std::string &data, KeyType type);
     bool loadFromFile(const QString &path, KeyType type, KeyFormat format = PEM);
     void clear();
 
-    bool isLoaded() const { return d.data() && d->key != 0; }
+    bool isLoaded() const;
     bool isPrivate() const;
+    bool isV3serviceID() const;
 
+    std::string getV3PublicKey() const;
+    QByteArray getDecodedV3PublicKey() const;
+    QByteArray getDecodedV3PrivateKey() const;
     QByteArray publicKeyDigest() const;
     QByteArray encodedPublicKey(KeyFormat format) const;
     QByteArray encodedPrivateKey(KeyFormat format) const;
@@ -88,6 +123,9 @@ private:
     };
 
     QExplicitlySharedDataPointer<Data> d;
+    Version version;
+    std::string v3privateKey;
+    std::string v3serviceID;
 };
 
 QByteArray torControlHashedPassword(const QByteArray &password);

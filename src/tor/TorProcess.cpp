@@ -114,6 +114,9 @@ QString TorProcess::errorMessage() const
     return d->errorMessage;
 }
 
+/**
+ * establish control over tor (with a randomly generated control password)
+ */
 void TorProcess::start()
 {
     if (state() > NotStarted)
@@ -197,6 +200,9 @@ void TorProcess::stop()
     emit stateChanged(d->state);
 }
 
+/**
+ * generate a random password
+ */
 QByteArray TorProcess::controlPassword()
 {
     if (d->controlPassword.isEmpty())
