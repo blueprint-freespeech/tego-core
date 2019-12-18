@@ -58,11 +58,18 @@ HiddenService::HiddenService(const QString &path, QObject *parent)
     }
 }
 
-HiddenService::HiddenService(const CryptoKey &privateKey, const QString &path, QObject *parent)
-    : QObject(parent), m_dataPath(path), m_status(NotCreated)
+HiddenService::HiddenService(const CryptoKey &privateKey, const QString &dataPath, QObject *parent)
+    : QObject(parent), m_dataPath(dataPath), m_status(NotCreated)
 {
     setPrivateKey(privateKey);
     m_status = Offline;
+}
+
+HiddenService::HiddenService(const CryptoKey &privateKey, const CryptoKey &serviceID, const QString &dataPath,
+                             QObject *parent):
+                             HiddenService(privateKey, dataPath, parent)
+{
+
 }
 
 void HiddenService::setStatus(Status newStatus)
@@ -107,6 +114,23 @@ void HiddenService::setPrivateKey(const CryptoKey &key)
     emit privateKeyChanged();
 }
 
+void HiddenService::setV3serviceID(const CryptoKey &serviceID)
+{
+    if (m_privateKey.isLoaded()) {
+        BUG() << "Cannot change the private key on an existing HiddenService";
+        return;
+    }
+
+    if (!serviceID.isPrivate()) {
+        BUG() << "Cannot create a hidden service with a public key";
+        return;
+    }
+
+    m_privateKey = serviceID;
+    m_hostname = m_privateKey.torServiceID() + QStringLiteral(".onion");
+    emit privateKeyChanged();
+}
+
 void HiddenService::loadPrivateKey()
 {
     if (m_privateKey.isLoaded() || m_dataPath.isEmpty())
@@ -134,4 +158,6 @@ void HiddenService::servicePublished()
     qDebug() << "Hidden service published successfully";
     setStatus(Online);
 }
+
+
 

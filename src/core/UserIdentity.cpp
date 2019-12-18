@@ -83,6 +83,7 @@ void UserIdentity::setupService()
     QString legacyDir = m_settings->read("dataDirectory").toString();
 
     if (!keyData.isEmpty()) {
+        // todo add v3 support: check keyDate length?
         CryptoKey key;
         if (!key.loadFromData(QByteArray::fromBase64(keyData.toLatin1()), CryptoKey::PrivateKey, CryptoKey::DER)) {
             qWarning() << "Cannot load service key from configuration";

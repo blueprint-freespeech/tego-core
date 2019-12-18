@@ -67,6 +67,9 @@ public:
     HiddenService(QObject *parent = 0);
     HiddenService(const QString &dataPath, QObject *parent = 0);
     HiddenService(const CryptoKey &privateKey, const QString &dataPath = QString(), QObject *parent = 0);
+    HiddenService(const CryptoKey &privateKey, const CryptoKey &serviceID,
+            const QString &dataPath = QString(), QObject *parent = 0);
+
 
     Status status() const { return m_status; }
 
@@ -75,6 +78,7 @@ public:
 
     CryptoKey privateKey() { return m_privateKey; }
     void setPrivateKey(const CryptoKey &privateKey);
+    void setV3serviceID(const CryptoKey &serviceID);
 
     const QList<Target> &targets() const { return m_targets; }
     void addTarget(const Target &target);
@@ -94,6 +98,7 @@ private:
     QString m_hostname;
     Status m_status;
     CryptoKey m_privateKey;
+    CryptoKey m_v3serviceId;
 
     void loadPrivateKey();
     void setStatus(Status newStatus);

@@ -483,7 +483,7 @@ void TorControlPrivate::publishServices()
 
         return;
     }
-
+    //note: here the private key has already been set for the service
     if (q->torVersionAsNewAs(QStringLiteral("0.2.7"))) {
         foreach (HiddenService *service, services) {
             if (service->hostname().isEmpty())
@@ -751,12 +751,15 @@ bool TorControl::torVersionAsNewAs(const QString &match) const
         bool ok1 = false, ok2 = false;
         int currentVal = split[i].toInt(&ok1);
         int matchVal = matchSplit[i].toInt(&ok2);
-        if (!ok1 || !ok2)
+        //fixed: it originally always returns false
+        if (ok1 && ok2) {
+            if (currentVal > matchVal)
+                return true;
+            if (currentVal < matchVal)
+                return false;
+        } else {
             return false;
-        if (currentVal > matchVal)
-            return true;
-        if (currentVal < matchVal)
-            return false;
+        }
     }
 
     // Versions are equal, up to the length of match

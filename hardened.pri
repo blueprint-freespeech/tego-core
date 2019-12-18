@@ -2,7 +2,6 @@ load(configure)
 # Define common variables; these are used by config tests _and_ the actual build
 
 # Supported in gcc 4.8+
-HARDENED_SANITIZE_FLAGS = -fsanitize=address
 # Supported in gcc 4.9+
 HARDENED_SANITIZE_UBSAN_FLAGS = -fsanitize=undefined -fsanitize=integer-divide-by-zero -fsanitize=bounds -fsanitize=alignment -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize-recover
 # Supported in gcc 5.0+
