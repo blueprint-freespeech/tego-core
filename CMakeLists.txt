@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
-
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(MACOSX TRUE)
+endif()
 project(ricochet-refresh)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -10,9 +12,12 @@ set(CMAKE_AUTOUIC ON)
 if(CMAKE_VERSION VERSION_LESS "3.7.0")
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
-set(QT5_DIR ${CMAKE_CURRENT_SOURCE_DIR}/buildscripts/src/qt5)
-set(Protobuf_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/buildscripts/src/protobuf/)
-set(OPENSSL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/buildscripts/src/openssl/)
+if (MACOSX)
+    set(QT5_DIR /usr/local/opt/qt/include)
+    set(Protobuf_INCLUDE_DIRS /usr/local/opt/protobuf/include)
+    set(OPENSSL_INCLUDE_DIR /usr/local/opt/openssl/include)
+endif()
+
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Protobuf REQUIRED)
@@ -99,7 +104,7 @@ set(HEADERS src/protocol/Channel.h
         src/utils/PendingOperation.h
         src/ui/LanguagesModel.h
         )
-include_directories("${CMAKE_SOURCE_DIR}/src" "${Protobuf_INCLUDE_DIRS}" "${QT5_DIR}")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src ${Protobuf_INCLUDE_DIRS} ${QT5_DIR})
 add_executable(ricochet-refresh ${SOURCES} ${HEADERS})
 target_link_libraries(ricochet-refresh Qt5::Widgets Qt5::Network OpenSSL::Crypto)
 target_link_libraries(ricochet-refresh Qt5::Widgets Qt5::Network Qt5::Quick Qt5::Core OpenSSL::Crypto)
