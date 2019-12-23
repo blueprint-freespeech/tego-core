@@ -38,6 +38,7 @@
 #include <openssl/bn.h>
 #include <openssl/bio.h>
 #include <openssl/pem.h>
+#include <QMessageBox>
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 void RSA_get0_factors(const RSA *r, const BIGNUM **p, const BIGNUM **q)
@@ -135,12 +136,12 @@ bool CryptoKey::loadFromDataV3(const std::string &data, CryptoKey::KeyType type)
     clear();
 
     this->version = V3;
-
     if (data.empty())
         return false;
 
     if (type == V3ServiceID) {
         this->v3serviceID = data;
+        QByteArray decode = getDecodedV3PublicKey();
         return true;
     } else if (type == V3PrivateKey) {
         this->v3privateKey = data;
@@ -236,8 +237,25 @@ std::string CryptoKey::getV3PublicKey() const {
 QByteArray CryptoKey::getDecodedV3PublicKey() const{
     if (!isLoaded() || !isV3serviceID()) {
         return QByteArray();
-    } else {
-        // todo
+    }
+    else {
+        std::string v3publicKey = getV3PublicKey();
+        // to upper case
+        for (auto &c: v3publicKey) c = toupper(c);
+        // padding last 4 positions (size of 56)
+        v3publicKey.append("====");
+        // dest variable, add 4 bytes for base32 algorithm
+        QByteArray re(CryptoKey::V3PublicKeyByteLength+4, 0);
+        // base32 decoding
+        base32_decode(re.data(), re.size(), v3publicKey.c_str(), v3publicKey.size());
+        // remove 3 bytes(1 checksum + 2 v3-related) and 1 null
+        re.chop(4);
+        // check length
+        if (re.size() == CryptoKey::V3PublicKeyByteLength) {
+            return re;
+        } else {
+            return QByteArray();
+        }
     }
 }
 
@@ -253,7 +271,7 @@ QByteArray CryptoKey::getDecodedV3PrivateKey() const{
         QByteArray stringBytes = QByteArray::fromStdString(this->v3privateKey);
         QByteArray bytes(QByteArray::fromBase64(stringBytes));
         // bytes.toHex().constData() will show the char* of the hex representation of decoded key
-        if (bytes.size() == CryptoKey::V3PrivateKeyLength) {
+        if (bytes.size() == CryptoKey::V3PrivateKeyByteLength) {
             return bytes;
         } else {
             return QByteArray();
@@ -623,7 +641,7 @@ void base32_encode(char *dest, unsigned destlen, const char *src, unsigned srcle
 }
 
 /* Implements base32 decoding as in rfc3548. Requires that srclen*5 is a multiple of 8. */
-bool base32_decode(char *dest, unsigned destlen, const char *src, unsigned srclen)
+bool base32_decode(char *dest, unsigned int destlen, const char *src, unsigned int srclen)
 {
     unsigned int i, j, bit;
     unsigned nbits = srclen * 5;
@@ -645,11 +663,11 @@ bool base32_decode(char *dest, unsigned destlen, const char *src, unsigned srcle
             tmp[j] = src[j] - 0x18;
         else if (src[j] > 0x40 && src[j] < 0x5B)
             tmp[j] = src[j] - 0x41;
-        else
-        {
-            delete[] tmp;
-            return false;
-        }
+//        else
+//        {
+//            delete[] tmp;
+//            return false;
+//        }
     }
 
     /* Assemble result byte-wise by applying five possible cases. */
