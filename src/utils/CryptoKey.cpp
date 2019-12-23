@@ -38,6 +38,8 @@
 #include <openssl/bn.h>
 #include <openssl/bio.h>
 #include <openssl/pem.h>
+#include <QMessageBox>
+#include <cppcodec/base32_rfc4648.hpp>
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 void RSA_get0_factors(const RSA *r, const BIGNUM **p, const BIGNUM **q)
@@ -236,8 +238,19 @@ std::string CryptoKey::getV3PublicKey() const {
 QByteArray CryptoKey::getDecodedV3PublicKey() const{
     if (!isLoaded() || !isV3serviceID()) {
         return QByteArray();
-    } else {
-        // todo
+    }
+    else {
+        using base32 = cppcodec::base32_rfc4648;
+        std::string v3publicKey = getV3PublicKey();
+        // to upper case
+        for (auto & c: v3publicKey) c = toupper(c);
+        // append ==== to last 4 positions (size of 56)
+        v3publicKey.append("====");
+        // decode public key into 32 byte
+        std::vector<uint8_t> decoded = base32::decode(v3publicKey);
+        // convert vector to QByteArray
+        QByteArray re(reinterpret_cast<const char*>(decoded.data()), decoded.size());
+        return re;
     }
 }
 
