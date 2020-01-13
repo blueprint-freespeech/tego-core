@@ -43,3 +43,6 @@ moc_predefs.h
 
 \.vscode/
 notes/*
+*.cbp
+*.txt
+cmake_install.cmake/
