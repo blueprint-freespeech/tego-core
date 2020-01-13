@@ -38,6 +38,7 @@
 #include "utils/CryptoKey.h"
 #include "utils/Useful.h"
 #include <QMessageAuthenticationCode>
+#include "../lib/onion_ed25519_signature/sign.h"
 
 using namespace Protocol;
 
@@ -316,31 +317,43 @@ void AuthHiddenServiceChannel::handleProof(const Data::AuthHiddenService::Proof 
 
     // Hidden services always use a 1024bit key. A valid signature will always be exactly 128 bytes.
     CryptoKey publicKey;
-    if (signature.size() != 128) {
-        qWarning() << "Received invalid signature (size" << signature.size() << ") on" << type();
-    } else if (publicKeyData.size() > 150) {
-        qWarning() << "Received invalid public key (size" << publicKeyData.size() << ") on" << type();
-    } else if (!publicKey.loadFromData(publicKeyData, CryptoKey::PublicKey, CryptoKey::DER)) {
-        // todo add v3 support
-        qWarning() << "Unable to parse public key from" << type();
-    } else if (publicKey.bits() != 1024) {
-        qWarning() << "Received invalid public key (" << publicKey.bits() << "bits) on" << type();
-    } else {
+    if (publicKey.loadFromDataV3(publicKeyData.constData(), CryptoKey::KeyType::PublicKey)) {
         bool ok = false;
         QByteArray proofData = d->getProofData(publicKey.torServiceID());
         if (!proofData.isEmpty()) {
             QByteArray proofHMAC = QMessageAuthenticationCode::hash(proofData, d->clientCookie + d->serverCookie,
-                    QCryptographicHash::Sha256);
-            // RSA 1024 publickey-signature verification
-            ok = publicKey.verifySHA256(proofHMAC, signature);
+                                                                    QCryptographicHash::Sha256);
+            //TODO: call verify function for v3
+//            ok = ed25519_sign_open(proofHMAC, proofHMAC.size(), publicKey.getV3PublicKey(), signature);
         }
-
-        if (!ok) {
-            qWarning() << "Signature verification failed on" << type();
-            result->set_accepted(false);
+    }
+    else {
+        if (signature.size() != 128) {
+            qWarning() << "Received invalid signature (size" << signature.size() << ") on" << type();
+        } else if (publicKeyData.size() > 150) {
+            qWarning() << "Received invalid public key (size" << publicKeyData.size() << ") on" << type();
+        } else if (!publicKey.loadFromData(publicKeyData, CryptoKey::PublicKey, CryptoKey::DER)) {
+            // todo add v3 support
+            qWarning() << "Unable to parse public key from" << type();
+        } else if (publicKey.bits() != 1024) {
+            qWarning() << "Received invalid public key (" << publicKey.bits() << "bits) on" << type();
         } else {
-            result->set_accepted(true);
-            qDebug() << type() << "accepted inbound authentication for" << publicKey.torServiceID();
+            bool ok = false;
+            QByteArray proofData = d->getProofData(publicKey.torServiceID());
+            if (!proofData.isEmpty()) {
+                QByteArray proofHMAC = QMessageAuthenticationCode::hash(proofData, d->clientCookie + d->serverCookie,
+                                                                        QCryptographicHash::Sha256);
+                // RSA 1024 publickey-signature verification
+                ok = publicKey.verifySHA256(proofHMAC, signature);
+            }
+
+            if (!ok) {
+                qWarning() << "Signature verification failed on" << type();
+                result->set_accepted(false);
+            } else {
+                result->set_accepted(true);
+                qDebug() << type() << "accepted inbound authentication for" << publicKey.torServiceID();
+            }
         }
     }
 

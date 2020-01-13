@@ -1,0 +1,388 @@
+{
+	"BUILD_DIR" : "/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen",
+	"CMAKE_BINARY_DIR" : "/Users/haojundong/Developer/ricochet",
+	"CMAKE_CURRENT_BINARY_DIR" : "/Users/haojundong/Developer/ricochet",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/Users/haojundong/Developer/ricochet",
+	"CMAKE_EXECUTABLE" : "/usr/local/Cellar/cmake/3.16.2/bin/cmake",
+	"CMAKE_SOURCE_DIR" : "/Users/haojundong/Developer/ricochet",
+	"HEADERS" : 
+	[
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ContactIDValidator.h",
+			"MU",
+			"PRMOGMWJPH/moc_ContactIDValidator.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ContactUser.h",
+			"MU",
+			"PRMOGMWJPH/moc_ContactUser.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ContactsManager.h",
+			"MU",
+			"PRMOGMWJPH/moc_ContactsManager.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ConversationModel.h",
+			"MU",
+			"PRMOGMWJPH/moc_ConversationModel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/IdentityManager.h",
+			"MU",
+			"PRMOGMWJPH/moc_IdentityManager.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/IncomingRequestManager.h",
+			"MU",
+			"PRMOGMWJPH/moc_IncomingRequestManager.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/OutgoingContactRequest.h",
+			"MU",
+			"PRMOGMWJPH/moc_OutgoingContactRequest.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/UserIdentity.h",
+			"MU",
+			"PRMOGMWJPH/moc_UserIdentity.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/AuthHiddenServiceChannel.h",
+			"MU",
+			"X5TIYENYS2/moc_AuthHiddenServiceChannel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/Channel.h",
+			"MU",
+			"X5TIYENYS2/moc_Channel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/Channel_p.h",
+			"MU",
+			"X5TIYENYS2/moc_Channel_p.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/ChatChannel.h",
+			"MU",
+			"X5TIYENYS2/moc_ChatChannel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/Connection.h",
+			"MU",
+			"X5TIYENYS2/moc_Connection.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/Connection_p.h",
+			"MU",
+			"X5TIYENYS2/moc_Connection_p.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/ContactRequestChannel.h",
+			"MU",
+			"X5TIYENYS2/moc_ContactRequestChannel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/ControlChannel.h",
+			"MU",
+			"X5TIYENYS2/moc_ControlChannel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/OutboundConnector.h",
+			"MU",
+			"X5TIYENYS2/moc_OutboundConnector.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/AddOnionCommand.h",
+			"MU",
+			"YFEXCPMSAB/moc_AddOnionCommand.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/AuthenticateCommand.h",
+			"MU",
+			"YFEXCPMSAB/moc_AuthenticateCommand.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/GetConfCommand.h",
+			"MU",
+			"YFEXCPMSAB/moc_GetConfCommand.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/HiddenService.h",
+			"MU",
+			"YFEXCPMSAB/moc_HiddenService.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/ProtocolInfoCommand.h",
+			"MU",
+			"YFEXCPMSAB/moc_ProtocolInfoCommand.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/SetConfCommand.h",
+			"MU",
+			"YFEXCPMSAB/moc_SetConfCommand.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorControl.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorControl.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorControlCommand.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorControlCommand.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorControlSocket.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorControlSocket.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorManager.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorManager.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorProcess.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorProcess.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorProcess_p.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorProcess_p.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorSocket.h",
+			"MU",
+			"YFEXCPMSAB/moc_TorSocket.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/ui/ContactsModel.h",
+			"MU",
+			"YPKJ5OE7LN/moc_ContactsModel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/ui/LanguagesModel.h",
+			"MU",
+			"YPKJ5OE7LN/moc_LanguagesModel.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/ui/LinkedText.h",
+			"MU",
+			"YPKJ5OE7LN/moc_LinkedText.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/ui/MainWindow.h",
+			"MU",
+			"YPKJ5OE7LN/moc_MainWindow.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/utils/CryptoKey.h",
+			"MU",
+			"VSCBVMNR7M/moc_CryptoKey.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/utils/PendingOperation.h",
+			"MU",
+			"VSCBVMNR7M/moc_PendingOperation.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/utils/SecureRNG.h",
+			"MU",
+			"VSCBVMNR7M/moc_SecureRNG.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/utils/Settings.h",
+			"MU",
+			"VSCBVMNR7M/moc_Settings.cpp"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/utils/StringUtil.h",
+			"MU",
+			"VSCBVMNR7M/moc_StringUtil.cpp"
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen/include",
+	"MOC_COMPILATION_FILE" : "/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NETWORK_LIB",
+		"QT_NO_DEBUG",
+		"QT_QMLMODELS_LIB",
+		"QT_QML_LIB",
+		"QT_QUICK_LIB",
+		"QT_WIDGETS_LIB"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/Users/haojundong/Developer/ricochet/src",
+		"/usr/local/Cellar/protobuf/3.11.2/include",
+		"/usr/local/opt/qt5/lib/QtWidgets.framework",
+		"/usr/local/opt/qt5/lib/QtWidgets.framework/Headers",
+		"/usr/local/opt/qt5/lib/QtGui.framework",
+		"/usr/local/opt/qt5/lib/QtGui.framework/Headers",
+		"/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
+		"/usr/local/opt/qt5/lib/QtCore.framework",
+		"/usr/local/opt/qt5/lib/QtCore.framework/Headers",
+		"/usr/local/opt/qt5/mkspecs/macx-clang",
+		"/usr/local/opt/qt5/lib/QtNetwork.framework",
+		"/usr/local/opt/qt5/lib/QtNetwork.framework/Headers",
+		"/usr/local/Cellar/openssl@1.1/1.1.1d/include",
+		"/usr/local/opt/qt5/lib/QtQuick.framework",
+		"/usr/local/opt/qt5/lib/QtQuick.framework/Headers",
+		"/usr/local/opt/qt5/lib/QtQmlModels.framework",
+		"/usr/local/opt/qt5/lib/QtQmlModels.framework/Headers",
+		"/usr/local/opt/qt5/lib/QtQml.framework",
+		"/usr/local/opt/qt5/lib/QtQml.framework/Headers",
+		"/Library/Developer/CommandLineTools/usr/include/c++/v1",
+		"/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include",
+		"/Library/Developer/CommandLineTools/usr/include",
+		"/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : true,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/Library/Developer/CommandLineTools/usr/bin/c++",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/local/Cellar/cmake/3.16.2/share/cmake/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 2,
+	"PARSE_CACHE_FILE" : "/Users/haojundong/Developer/ricochet/CMakeFiles/ricochet-refresh_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/usr/local/opt/qt5/bin/moc",
+	"QT_UIC_EXECUTABLE" : "/usr/local/opt/qt5/bin/uic",
+	"QT_VERSION_MAJOR" : 5,
+	"SETTINGS_FILE" : "/Users/haojundong/Developer/ricochet/CMakeFiles/ricochet-refresh_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ContactIDValidator.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/core/ContactUser.cpp", "MU" ],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ContactsManager.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/ConversationModel.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/IdentityManager.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/IncomingRequestManager.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/OutgoingContactRequest.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/core/UserIdentity.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/main.cpp", "MU" ],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/AuthHiddenServiceChannel.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/protocol/Channel.cpp", "MU" ],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/ChatChannel.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/Connection.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/ContactRequestChannel.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/ControlChannel.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/protocol/OutboundConnector.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/AddOnionCommand.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/AuthenticateCommand.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/GetConfCommand.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/HiddenService.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/ProtocolInfoCommand.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/SetConfCommand.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/tor/TorControl.cpp", "MU" ],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorControlCommand.cpp",
+			"MU"
+		],
+		[
+			"/Users/haojundong/Developer/ricochet/src/tor/TorControlSocket.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/tor/TorManager.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/tor/TorProcess.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/tor/TorSocket.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/ui/ContactsModel.cpp", "MU" ],
+		[
+			"/Users/haojundong/Developer/ricochet/src/ui/LanguagesModel.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/ui/LinkedText.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/ui/MainWindow.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/utils/CryptoKey.cpp", "MU" ],
+		[
+			"/Users/haojundong/Developer/ricochet/src/utils/PendingOperation.cpp",
+			"MU"
+		],
+		[ "/Users/haojundong/Developer/ricochet/src/utils/SecureRNG.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/utils/Settings.cpp", "MU" ],
+		[ "/Users/haojundong/Developer/ricochet/src/utils/StringUtil.cpp", "MU" ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

@@ -39,6 +39,7 @@
 #include <openssl/bio.h>
 #include <openssl/pem.h>
 #include <QMessageBox>
+#include "../lib/onion_ed25519_signature/sign.h"
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 void RSA_get0_factors(const RSA *r, const BIGNUM **p, const BIGNUM **q)
@@ -141,10 +142,10 @@ bool CryptoKey::loadFromDataV3(const std::string &data, CryptoKey::KeyType type)
 
     if (type == V3ServiceID) {
         this->v3serviceID = data;
-        QByteArray decode = getDecodedV3PublicKey();
+        this->v3publicKey = getDecodedV3PublicKey().constData();
         return true;
     } else if (type == V3PrivateKey) {
-        this->v3privateKey = data;
+        this->v3privateKey = getDecodedV3PrivateKey().constData();
         return true;
     } else {
         return false;
@@ -462,7 +463,11 @@ QString CryptoKey::torServiceID() const
 QByteArray CryptoKey::signData(const QByteArray &data) const
 {
     if (version == V3) {
-        // todo
+        std::string signature;
+        // TODO: sign v3 ed25519 key
+        // param1: signature, param2: message(proof data), param3: message length, param4: private key, param5: public key
+
+
     } else if (version == V2) {
         QByteArray digest(32, 0);
         bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
