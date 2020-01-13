@@ -161,6 +161,10 @@ unix:!macx:QTPLUGIN.platforminputcontexts = composeplatforminputcontextplugin ib
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
 SOURCES += src/main.cpp \
+    lib/onion_ed25519_signature/convert.c \
+    lib/onion_ed25519_signature/ed25519.c \
+    lib/onion_ed25519_signature/sign.c \
+    lib/onion_ed25519_signature/verify.c \
     src/ui/MainWindow.cpp \
     src/ui/ContactsModel.cpp \
     src/tor/TorControl.cpp \
@@ -192,6 +196,19 @@ SOURCES += src/main.cpp \
     src/ui/LanguagesModel.cpp
 
 HEADERS += src/ui/MainWindow.h \
+    lib/onion_ed25519_signature/curve25519-donna-64bit.h \
+    lib/onion_ed25519_signature/curve25519-donna-helpers.h \
+    lib/onion_ed25519_signature/ed25519-donna-64bit-tables.h \
+    lib/onion_ed25519_signature/ed25519-donna-64bit-x86.h \
+    lib/onion_ed25519_signature/ed25519-donna-basepoint-table.h \
+    lib/onion_ed25519_signature/ed25519-donna-impl-base.h \
+    lib/onion_ed25519_signature/ed25519-donna-portable-identify.h \
+    lib/onion_ed25519_signature/ed25519-donna-portable.h \
+    lib/onion_ed25519_signature/ed25519-donna.h \
+    lib/onion_ed25519_signature/ed25519-hash.h \
+    lib/onion_ed25519_signature/modm-donna-64bit.h \
+    lib/onion_ed25519_signature/orconfig.h \
+    lib/onion_ed25519_signature/sign.h \
     src/ui/ContactsModel.h \
     src/tor/TorControl.h \
     src/tor/TorControlSocket.h \
@@ -297,3 +314,6 @@ TRANSLATIONS += \
 }
 
 RESOURCES += translation/embedded.qrc
+
+DISTFILES += \
+    lib/onion_ed25519_signature/README.md

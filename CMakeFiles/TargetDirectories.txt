@@ -1,0 +1,4 @@
+/Users/haojundong/Developer/ricochet/CMakeFiles/rebuild_cache.dir
+/Users/haojundong/Developer/ricochet/CMakeFiles/edit_cache.dir
+/Users/haojundong/Developer/ricochet/CMakeFiles/ricochet-refresh.dir
+/Users/haojundong/Developer/ricochet/CMakeFiles/ricochet-refresh_autogen.dir

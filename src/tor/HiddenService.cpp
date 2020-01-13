@@ -108,7 +108,6 @@ void HiddenService::setPrivateKey(const CryptoKey &key)
         BUG() << "Cannot create a hidden service with a public key";
         return;
     }
-
     m_privateKey = key;
     m_hostname = m_privateKey.torServiceID() + QStringLiteral(".onion");
     emit privateKeyChanged();

@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="ricochet-refresh"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\opt\;CMake Files\..\..\..\..\usr\local\opt\qt5\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Widgets\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Core\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Network\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Quick\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5QmlModels\;CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/haojundong/Developer/ricochet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/haojundong/Developer/ricochet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/haojundong/Developer/ricochet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ricochet-refresh">
+				<Option output="/Users/haojundong/Developer/ricochet/ricochet-refresh" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/haojundong/Developer/ricochet"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_WIDGETS_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add option="-DQT_QUICK_LIB"/>
+					<Add option="-DQT_QMLMODELS_LIB"/>
+					<Add option="-DQT_QML_LIB"/>
+					<Add directory="/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen/include"/>
+					<Add directory="/Users/haojundong/Developer/ricochet/src"/>
+					<Add directory="/usr/local/Cellar/protobuf/3.11.2/include"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtWidgets.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtWidgets.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtGui.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtGui.framework/Headers"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtCore.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtCore.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/./mkspecs/macx-clang"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtNetwork.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtNetwork.framework/Headers"/>
+					<Add directory="/usr/local/Cellar/openssl@1.1/1.1.1d/include"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQuick.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQuick.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQmlModels.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQmlModels.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQml.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQml.framework/Headers"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 ricochet-refresh"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ricochet-refresh/fast">
+				<Option output="/Users/haojundong/Developer/ricochet/ricochet-refresh" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/haojundong/Developer/ricochet"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_WIDGETS_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add option="-DQT_QUICK_LIB"/>
+					<Add option="-DQT_QMLMODELS_LIB"/>
+					<Add option="-DQT_QML_LIB"/>
+					<Add directory="/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen/include"/>
+					<Add directory="/Users/haojundong/Developer/ricochet/src"/>
+					<Add directory="/usr/local/Cellar/protobuf/3.11.2/include"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtWidgets.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtWidgets.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtGui.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtGui.framework/Headers"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtCore.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtCore.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/./mkspecs/macx-clang"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtNetwork.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtNetwork.framework/Headers"/>
+					<Add directory="/usr/local/Cellar/openssl@1.1/1.1.1d/include"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQuick.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQuick.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQmlModels.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQmlModels.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQml.framework"/>
+					<Add directory="/usr/local/opt/qt5/lib/QtQml.framework/Headers"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 ricochet-refresh/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ricochet-refresh_autogen">
+				<Option working_dir="/Users/haojundong/Developer/ricochet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 ricochet-refresh_autogen"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/haojundong/Developer/ricochet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/curve25519-donna-64bit.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/curve25519-donna-helpers.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna-64bit-tables.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna-64bit-x86.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna-basepoint-table.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna-impl-base.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna-portable-identify.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna-portable.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-donna.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519-hash.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/ed25519.c">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/modm-donna-64bit.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/lib/onion_ed25519_signature/orconfig.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/ricochet-refresh_autogen/mocs_compilation.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ContactIDValidator.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ContactIDValidator.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ContactUser.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ContactUser.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ContactsManager.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ContactsManager.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ConversationModel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/ConversationModel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/IdentityManager.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/IdentityManager.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/IncomingRequestManager.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/IncomingRequestManager.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/OutgoingContactRequest.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/OutgoingContactRequest.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/UserIdentity.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/core/UserIdentity.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/main.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/AuthHiddenServiceChannel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/AuthHiddenServiceChannel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/Channel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/Channel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/Channel_p.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/ChatChannel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/ChatChannel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/Connection.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/Connection.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/Connection_p.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/ContactRequestChannel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/ContactRequestChannel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/ControlChannel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/ControlChannel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/OutboundConnector.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/protocol/OutboundConnector.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/AddOnionCommand.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/AddOnionCommand.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/AuthenticateCommand.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/AuthenticateCommand.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/GetConfCommand.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/GetConfCommand.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/HiddenService.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/HiddenService.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/ProtocolInfoCommand.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/ProtocolInfoCommand.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/SetConfCommand.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/SetConfCommand.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorControl.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorControl.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorControlCommand.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorControlCommand.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorControlSocket.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorControlSocket.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorManager.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorManager.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorProcess.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorProcess.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorProcess_p.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorSocket.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/tor/TorSocket.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/ContactsModel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/ContactsModel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/LanguagesModel.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/LanguagesModel.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/LinkedText.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/LinkedText.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/MainWindow.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/ui/MainWindow.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/CryptoKey.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/CryptoKey.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/PendingOperation.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/PendingOperation.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/SecureRNG.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/SecureRNG.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/Settings.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/Settings.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/StringUtil.cpp">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/src/utils/StringUtil.h">
+			<Option target="ricochet-refresh"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Widgets/Qt5Widgets_QMacStylePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QCocoaIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QMacHeifPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QMacJp2Plugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QSvgIconPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QWebGLIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Gui/Qt5Gui_QXdgDesktopPortalThemePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5/Qt5Config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5/Qt5ConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5/Qt5ModuleLocation.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Quick/Qt5QuickConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Quick\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Quick/Qt5QuickConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Quick\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5QmlModels/Qt5QmlModelsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5QmlModels\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5QmlModels/Qt5QmlModelsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5QmlModels\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5QmlConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5QmlConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5QmlConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QDebugMessageServiceFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QLocalClientConnectionFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlDebugServerFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlDebuggerServiceFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlInspectorServiceFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlNativeDebugConnectorFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlNativeDebugServiceFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlPreviewServiceFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQmlProfilerServiceFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QQuickProfilerAdapterFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+		<Unit filename="/Users/haojundong/Developer/ricochet/../../../../usr/local/opt/qt5/lib/cmake/Qt5Qml/Qt5Qml_QTcpServerConnectionFactory.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\opt\qt5\lib\cmake\Qt5Qml\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

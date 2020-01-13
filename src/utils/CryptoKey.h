@@ -123,8 +123,11 @@ private:
     };
 
     QExplicitlySharedDataPointer<Data> d;
+
+
     Version version;
     std::string v3privateKey;
+    std::string v3publicKey;
     std::string v3serviceID;
 };
 
