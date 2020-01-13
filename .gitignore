@@ -46,3 +46,6 @@ notes/*
 *.cbp
 CMakeCache.txt
 cmake_install.cmake/
+ricochet-refresh_autogen/
+CMakeFiles/
+tests/
