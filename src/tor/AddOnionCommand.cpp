@@ -53,12 +53,12 @@ QByteArray AddOnionCommand::build()
     QByteArray out("ADD_ONION");
 
     if (m_service->privateKey().isLoaded()) {
-//        out += " RSA1024:";
-        out += " ED25519-V3:";
+        out += " RSA1024:";
+//        out += " ED25519-V3:";
         out += m_service->privateKey().encodedPrivateKey(CryptoKey::DER).toBase64();
     } else {
-//        out += " NEW:RSA1024";
-        out += " NEW:ED25519-V3";
+        out += " NEW:RSA1024";
+//        out += " NEW:ED25519-V3";
     }
 
     foreach (const HiddenService::Target &target, m_service->targets()) {
@@ -86,7 +86,7 @@ void AddOnionCommand::onReply(int statusCode, const QByteArray &data)
     const QByteArray keyPrefixV3("PrivateKey=ED25519-V3:");
     const QByteArray serviceIDPrefix("ServiceID=");
 
-
+    // returned data is v2 private key
     if (data.startsWith(keyPrefix)) {
         QByteArray keyData(QByteArray::fromBase64(data.mid(keyPrefix.size())));
         CryptoKey key;
@@ -95,12 +95,20 @@ void AddOnionCommand::onReply(int statusCode, const QByteArray &data)
             return;
         }
         m_service->setPrivateKey(key);
-    } else if (data.startsWith(keyPrefixV3)) {
+    }
+    // returned data is v3 private key
+    else if (data.startsWith(keyPrefixV3)) {
         CryptoKey key(CryptoKey::V3);
         std::string keyData = data.toStdString()
                 .substr(keyPrefixV3.size());
-        key.loadFromDataV3(keyData, CryptoKey::V3PrivateKey);
-    } else if ((data.size() == CryptoKey::V3ServiceIDLength + serviceIDPrefix.size())
+        if(!key.loadFromDataV3(keyData, CryptoKey::V3PrivateKey)) {
+            m_errorMessage = QStringLiteral("Key decoding failed");
+            return;
+        }
+        m_service->setPrivateKey(key);
+    }
+    // returned data is v3 serviced ID
+    else if ((data.size() == CryptoKey::V3ServiceIDLength + serviceIDPrefix.size())
             && data.startsWith((serviceIDPrefix))) {
         // store the v3 service ID
         // to get public key from serviceID:
@@ -109,7 +117,11 @@ void AddOnionCommand::onReply(int statusCode, const QByteArray &data)
         CryptoKey key(CryptoKey::V3);
         std::string keyData = data.toStdString()
                 .substr(serviceIDPrefix.size());
-        key.loadFromDataV3(keyData, CryptoKey::V3ServiceID);
+        if (!key.loadFromDataV3(keyData, CryptoKey::V3ServiceID)) {
+            m_errorMessage = QStringLiteral("Error assigning service ID");
+            return;
+        }
+        m_service->setV3serviceID(key);
     }
 }
 

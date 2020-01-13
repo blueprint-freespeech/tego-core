@@ -63,6 +63,7 @@ set(SOURCES src/main.cpp
         src/protocol/AuthHiddenServiceChannel.cpp
         src/protocol/ChatChannel.cpp
         src/protocol/ContactRequestChannel.cpp
+        lib/onion_ed25519_signature/ed25519.c
         )
 set(HEADERS src/protocol/Channel.h
         src/protocol/Channel_p.h
@@ -103,6 +104,18 @@ set(HEADERS src/protocol/Channel.h
         src/utils/Settings.h
         src/utils/PendingOperation.h
         src/ui/LanguagesModel.h
+        lib/onion_ed25519_signature/curve25519-donna-64bit.h
+        lib/onion_ed25519_signature/curve25519-donna-helpers.h
+        lib/onion_ed25519_signature/ed25519-donna.h
+        lib/onion_ed25519_signature/ed25519-donna-64bit-tables.h
+        lib/onion_ed25519_signature/ed25519-donna-64bit-x86.h
+        lib/onion_ed25519_signature/ed25519-donna-basepoint-table.h
+        lib/onion_ed25519_signature/ed25519-donna-impl-base.h
+        lib/onion_ed25519_signature/ed25519-donna-portable.h
+        lib/onion_ed25519_signature/ed25519-donna-portable-identify.h
+        lib/onion_ed25519_signature/ed25519-hash.h
+        lib/onion_ed25519_signature/modm-donna-64bit.h
+        lib/onion_ed25519_signature/orconfig.h
         )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src ${Protobuf_INCLUDE_DIRS} ${QT5_DIR})
 add_executable(ricochet-refresh ${SOURCES} ${HEADERS})
