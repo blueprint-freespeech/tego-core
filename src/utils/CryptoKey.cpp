@@ -455,35 +455,12 @@ QString CryptoKey::torServiceID() const
     }
 }
 
-/**
- * sign the data's digest (a checksum of data by SHA256) with own private key
- * @param data
- * @return signature
- */
-QByteArray CryptoKey::signData(const QByteArray &data) const
-{
-    if (version == V3) {
-        std::string signature;
-        // TODO: sign v3 ed25519 key
-        // param1: signature, param2: message(proof data), param3: message length, param4: private key, param5: public key
 
-
-    } else if (version == V2) {
-        QByteArray digest(32, 0);
-        bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
-                         reinterpret_cast<unsigned char*>(digest.data())) != NULL;
-        if (!ok) {
-            qWarning() << "Digest for RSA signature failed";
-            return QByteArray();
-        }
-
-        return signSHA256(digest);
-    }
-    return QByteArray();
-}
 
 /**
- * sign the digest with SHA256, only used by v2
+ * sign the message(proofHMAC)
+ * for v2: using RSA_sign
+ * for v3: using donna_sign
  * @param digest
  * @return the signature
  */
@@ -492,66 +469,49 @@ QByteArray CryptoKey::signSHA256(const QByteArray &digest) const
     if (!isPrivate())
         return QByteArray();
 
-    QByteArray re(RSA_size(d->key), 0);
-    unsigned sigsize = 0;
-    int r = RSA_sign(NID_sha256, reinterpret_cast<const unsigned char*>(digest.constData()), digest.size(),
-                     reinterpret_cast<unsigned char*>(re.data()), &sigsize, d->key);
-
-    if (r != 1) {
-        qWarning() << "RSA encryption failed when generating signature";
+    if (version == V2) {
+        QByteArray re(RSA_size(d->key), 0);
+        unsigned sigsize = 0;
+        int r = RSA_sign(NID_sha256, reinterpret_cast<const unsigned char *>(digest.constData()), digest.size(),
+                         reinterpret_cast<unsigned char *>(re.data()), &sigsize, d->key);
+        if (r != 1) {
+            qWarning() << "RSA encryption failed when generating signature";
+            return QByteArray();
+        }
+        re.truncate(sigsize);
+        return re;
+    }
+    else if (version == V3) {
+        //TODO: call signing function for v3 keys
+    }
+    else {
         return QByteArray();
     }
-
-    re.truncate(sigsize);
-    return re;
-}
-
-/**
- * verify the data('s digest) against the signature, with own key
- * @param data
- * @param signature
- * @return valid or not
- */
-bool CryptoKey::verifyData(const QByteArray &data, QByteArray signature) const
-{
-    if (version == V3) {
-        // todo
-    } else if (version == V2) {
-        QByteArray digest(32, 0);
-        bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
-                         reinterpret_cast<unsigned char*>(digest.data())) != NULL;
-
-        if (!ok) {
-            qWarning() << "Digest for RSA verify failed";
-            return false;
-        }
-
-        return verifySHA256(digest, signature);
-    }
-    return false;
 }
 
 /**
  * check data digest against signature with own key
- * @param digest the data digest (a check sum of the data using SHA256)
- * @param signature the signature to test
+ * @param digest clientCookie + serverCookie (a check sum of the data using SHA256) a.k.a message
+ * @param the signature to test
  * @return valid or not
+ * v3: need pubkey and message length
  */
 bool CryptoKey::verifySHA256(const QByteArray &digest, QByteArray signature) const
 {
-    if (version == V3) {
-        // todo
-    } else if (version == V2) {
-        if (!isLoaded())
-            return false;
+    if (!isLoaded())
+        return false;
 
+    if (version == V2) {
         int r = RSA_verify(NID_sha256, reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
                            reinterpret_cast<uchar*>(signature.data()), signature.size(), d->key);
-        if (r != 1)
-            return false;
-        return true;
+        return r == 1;
     }
-    return false;
+    else if (version == V3) {
+        //TODO: call verifying function for v3 keys
+    }
+    else {
+        return false;
+    }
 }
 
 /* Cryptographic hash of a password as expected by Tor's HashedControlPassword */
@@ -580,6 +540,60 @@ QByteArray torControlHashedPassword(const QByteArray &password)
     /* 60 is the hex-encoded value of 96, which is a constant used by Tor's algorithm. */
     return QByteArray("16:") + salt.toHex().toUpper() + QByteArray("60") +
            QByteArray::fromRawData(reinterpret_cast<const char*>(md), 20).toHex().toUpper();
+}
+
+/**
+ * verify the data('s digest) against the signature, with own key
+ * used by test
+ * @param data
+ * @param signature
+ * @return valid or not
+ */
+bool CryptoKey::verifyData(const QByteArray &data, QByteArray signature) const
+{
+    if (version == V3) {
+        // todo
+    } else if (version == V2) {
+        QByteArray digest(32, 0);
+        bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
+                         reinterpret_cast<unsigned char*>(digest.data())) != NULL;
+
+        if (!ok) {
+            qWarning() << "Digest for RSA verify failed";
+            return false;
+        }
+
+        return verifySHA256(digest, signature);
+    }
+    return false;
+}
+
+/**
+ * sign the data's digest (a checksum of data by SHA256) with own private key
+ * used by test
+ * @param data
+ * @return signature
+ */
+QByteArray CryptoKey::signData(const QByteArray &data) const
+{
+    if (version == V3) {
+        std::string signature;
+        // TODO: sign v3 ed25519 key
+        // param1: signature, param2: message(proof data), param3: message length, param4: private key, param5: public key
+
+
+    } else if (version == V2) {
+        QByteArray digest(32, 0);
+        bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
+                         reinterpret_cast<unsigned char*>(digest.data())) != NULL;
+        if (!ok) {
+            qWarning() << "Digest for RSA signature failed";
+            return QByteArray();
+        }
+
+        return signSHA256(digest);
+    }
+    return QByteArray();
 }
 
 /* Copyright (c) 2001-2004, Roger Dingledine
