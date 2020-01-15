@@ -50,6 +50,7 @@ public:
 
     static const int V3PrivateKeyByteLength = 64;
     static const int V3PublicKeyByteLength = 32;
+    static const int V3SignatureByteLength = 64;
 
 
     enum KeyType {
