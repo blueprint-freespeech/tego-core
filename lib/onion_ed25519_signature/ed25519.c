@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include "sign.h"
-#include "ed25519-hash.h"
-#include "ed25519-donna.h"
 
 unsigned char * convert(char *s) {
     size_t src_len = strlen(s);
@@ -55,7 +53,7 @@ ed25519_donna_sign(unsigned char *sig, const unsigned char *m, size_t mlen,
     /* S = (r + H(R,A,m)a) mod L */
     contract256_modm(sig + 32, S);
 
-    return 0;
+    return 1;
 }
 
 int
