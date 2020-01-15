@@ -208,7 +208,7 @@
 #define SIZEOF_SIZE_T 4
 
 /* Define to 1 if you have the ANSI C header files. */
-#define STDC_HEADERS
+//#define STDC_HEADERS
 
 /* Define to 1 iff unaligned int access is allowed */
 #define UNALIGNED_INT_ACCESS_OK
