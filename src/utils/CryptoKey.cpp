@@ -39,7 +39,9 @@
 #include <openssl/bio.h>
 #include <openssl/pem.h>
 #include <QMessageBox>
-#include "../lib/onion_ed25519_signature/sign.h"
+extern "C" {
+    #include "../lib/onion_ed25519_signature/sign.h"
+}
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 void RSA_get0_factors(const RSA *r, const BIGNUM **p, const BIGNUM **q)
@@ -141,11 +143,11 @@ bool CryptoKey::loadFromDataV3(const std::string &data, CryptoKey::KeyType type)
         return false;
 
     if (type == V3ServiceID) {
-        this->v3serviceID = data;
-        this->v3publicKey = getDecodedV3PublicKey().constData();
+        v3serviceID = data;
+        v3publicKey = getDecodedV3PublicKey().constData();
         return true;
     } else if (type == V3PrivateKey) {
-        this->v3privateKey = getDecodedV3PrivateKey().constData();
+        v3privateKey = getDecodedV3PrivateKey().constData();
         return true;
     } else {
         return false;
@@ -176,8 +178,7 @@ bool CryptoKey::isLoaded() const{
     if (version == V2) {
         return d.data() && d->key != 0;
     } else if (version == V3) {
-        return ((v3privateKey.empty() && !v3serviceID.empty()) ||
-                (v3serviceID.empty() && !v3privateKey.empty()));
+        return true;
     }
     return false;
 }
@@ -197,7 +198,7 @@ bool CryptoKey::isPrivate() const
             RSA_get0_factors(d->key, &p, &q);
             return (p != 0);
         } else if (version == V3) {
-            return v3privateKey.length() == CryptoKey::V3PrivateKeyLength;
+            return (v3privateKey.length() == CryptoKey::V3PrivateKeyLength || (v3serviceID.empty()));
         } else {
             return false;
         }
@@ -468,23 +469,39 @@ QByteArray CryptoKey::signSHA256(const QByteArray &digest) const
 {
     if (!isPrivate())
         return QByteArray();
-
+    int result = 0; // result on generating signature, 1: successful, 0: failed
     if (version == V2) {
         QByteArray re(RSA_size(d->key), 0);
         unsigned sigsize = 0;
-        int r = RSA_sign(NID_sha256, reinterpret_cast<const unsigned char *>(digest.constData()), digest.size(),
+        result = RSA_sign(NID_sha256, reinterpret_cast<const unsigned char *>(digest.constData()), digest.size(),
                          reinterpret_cast<unsigned char *>(re.data()), &sigsize, d->key);
-        if (r != 1) {
+        if (result != 1) {
             qWarning() << "RSA encryption failed when generating signature";
             return QByteArray();
         }
-        re.truncate(sigsize);
-        return re;
+        else {
+            re.truncate(sigsize);
+            return re;
+        }
     }
     else if (version == V3) {
-        //TODO: call signing function for v3 keys
+        // call signing function for v3 keys
+        QByteArray re(V3SignatureByteLength, 0);
+        result = ed25519_donna_sign(
+                reinterpret_cast<unsigned char *>(re.data()),
+                reinterpret_cast<const unsigned char *>(digest.constData()),
+                digest.size(), reinterpret_cast<const unsigned char *>(v3privateKey.c_str()),
+                reinterpret_cast<const unsigned char *>(v3publicKey.c_str()));
+        if (result != 1) {
+            qWarning() << "ed25519 encryption failed when generating signature";
+            return QByteArray();
+        }
+        else {
+            return re;
+        }
     }
     else {
+        qWarning() << "Failed generating signature: no version";
         return QByteArray();
     }
 }
@@ -500,18 +517,21 @@ bool CryptoKey::verifySHA256(const QByteArray &digest, QByteArray signature) con
 {
     if (!isLoaded())
         return false;
-
+    int result = 0; // result on verifying signature, 1: successful, 0: failed
     if (version == V2) {
-        int r = RSA_verify(NID_sha256, reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
+        result = RSA_verify(NID_sha256, reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
                            reinterpret_cast<uchar*>(signature.data()), signature.size(), d->key);
-        return r == 1;
     }
     else if (version == V3) {
-        //TODO: call verifying function for v3 keys
+        //call verifying function for v3 keys
+        result = ed25519_sign_open(reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
+                                   reinterpret_cast<const uchar*>(v3publicKey.c_str()),
+                                   reinterpret_cast<const uchar*>(signature.constData()));
     }
     else {
         return false;
     }
+    return result == 1;
 }
 
 /* Cryptographic hash of a password as expected by Tor's HashedControlPassword */
@@ -578,7 +598,7 @@ QByteArray CryptoKey::signData(const QByteArray &data) const
 {
     if (version == V3) {
         std::string signature;
-        // TODO: sign v3 ed25519 key
+        // todo: sign v3 ed25519 key
         // param1: signature, param2: message(proof data), param3: message length, param4: private key, param5: public key
 
 
