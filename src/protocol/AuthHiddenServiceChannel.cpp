@@ -216,6 +216,7 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     //     cookie: pre-stored 16 bits random byte array
     //    message: proof data
     QByteArray signature;
+    //FIXME: d->privateKey is a CryptoKey instance with v3serviceID=""
     QByteArray proofData = d->getProofData(d->privateKey.torServiceID());
     if (!proofData.isEmpty()) {
         // make a HMAC of the proof data
@@ -253,6 +254,9 @@ void AuthHiddenServiceChannel::sendAuthMessage()
  */
 QByteArray AuthHiddenServiceChannelPrivate::getProofData(const QString &client)
 {
+    // TODO: add v3 compatibility
+    // TODO: change if condition to make v3 compatible. V2 has 16 chars ricochet: <ID>. V3 has 52.
+    // FIXME: Currently, clientHostname is empty string, client didn't get passed correctly from parameters.
     QByteArray serverHostname = connection->serverHostname().toLatin1().mid(0, 16);
     QByteArray clientHostname = client.toLatin1();
 
@@ -334,6 +338,7 @@ void AuthHiddenServiceChannel::handleProof(const Data::AuthHiddenService::Proof 
         qWarning() << "Received invalid signature (size" << signature.size() << ") on" << type();
     }
     if (decoded) {
+        // FIXME: parameter is a empty string
         QByteArray proofData = d->getProofData(publicKey.torServiceID());
         if (!proofData.isEmpty()) {
             // form a message for signature

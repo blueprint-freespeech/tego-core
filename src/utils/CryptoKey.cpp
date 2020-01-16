@@ -147,6 +147,7 @@ bool CryptoKey::loadFromDataV3(const std::string &data, CryptoKey::KeyType type)
         v3publicKey = getDecodedV3PublicKey().constData();
         return true;
     } else if (type == V3PrivateKey) {
+        this->v3privateKey = data;
         v3privateKey = getDecodedV3PrivateKey().constData();
         return true;
     } else {
@@ -156,18 +157,24 @@ bool CryptoKey::loadFromDataV3(const std::string &data, CryptoKey::KeyType type)
 
 bool CryptoKey::loadFromFile(const QString &path, KeyType type, KeyFormat format)
 {
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qWarning() << "Failed to open" << (type == PrivateKey ? "private" : "public") << "key from"
-                   << path << "-" << file.errorString();
-        return false;
+    if (version == V2) {
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            qWarning() << "Failed to open" << (type == PrivateKey ? "private" : "public") << "key from"
+                       << path << "-" << file.errorString();
+            return false;
+        }
+
+        QByteArray data = file.readAll();
+        file.close();
+
+        return loadFromData(data, type, format);
     }
-
-    QByteArray data = file.readAll();
-    file.close();
-
-    return loadFromData(data, type, format);
+    else if (version == V3) {
+        //FIXME: this is incorrect, fix it later
+        return true;
+    }
 }
 
 /**
@@ -178,7 +185,16 @@ bool CryptoKey::isLoaded() const{
     if (version == V2) {
         return d.data() && d->key != 0;
     } else if (version == V3) {
-        return true;
+        //TODO: for v3
+        //FIXME: logic for v3 need to be corrected
+        if (v3privateKey.empty()) {
+            // v3 private key is empty. check service id
+            return v3serviceID.length() == CryptoKey::V3ServiceIDLength;
+        }
+        else {
+            // v3 private key is not empty. check v3 private key
+            return v3privateKey.length() == CryptoKey::V3PrivateKeyByteLength;
+        }
     }
     return false;
 }
@@ -198,7 +214,9 @@ bool CryptoKey::isPrivate() const
             RSA_get0_factors(d->key, &p, &q);
             return (p != 0);
         } else if (version == V3) {
-            return (v3privateKey.length() == CryptoKey::V3PrivateKeyLength || (v3serviceID.empty()));
+            //TODO: for v3
+            //FIXME: logic for v3 need to be corrected
+            return v3privateKey.length() == CryptoKey::V3PrivateKeyByteLength;
         } else {
             return false;
         }
@@ -267,9 +285,9 @@ QByteArray CryptoKey::getDecodedV3PublicKey() const{
  * @return private key in bytes
  */
 QByteArray CryptoKey::getDecodedV3PrivateKey() const{
-    if (!isLoaded() || version != V3 || !isPrivate()) {
-        return QByteArray();
-    } else {
+//    if (!isLoaded() || version != V3 || !isPrivate()) {
+//        return QByteArray();
+//    } else {
         QByteArray stringBytes = QByteArray::fromStdString(this->v3privateKey);
         QByteArray bytes(QByteArray::fromBase64(stringBytes));
         // bytes.toHex().constData() will show the char* of the hex representation of decoded key
@@ -278,7 +296,7 @@ QByteArray CryptoKey::getDecodedV3PrivateKey() const{
         } else {
             return QByteArray();
         }
-    }
+//    }
 }
 
 /**
