@@ -83,10 +83,21 @@ void UserIdentity::setupService()
     QString legacyDir = m_settings->read("dataDirectory").toString();
 
     if (!keyData.isEmpty()) {
-        // todo add v3 support: check keyDate length?
+        // TODO: add v3 support: by checking keyData length we know it's v3 or v2
+        // FIXME: need to add loadfromfile() inside loadfromdatav3() or not ?
         CryptoKey key;
+        if (keyData.size() == 88) {
+            // v3
+//            if (!key.loadFromDataV3(keyData.toLatin1().toStdString(), CryptoKey::V3PrivateKey)) {
+//                qWarning() << "Cannot load v3 service key from configuration";
+//                return;
+//            }
+//            else {
+//
+//            }
+        }
         if (!key.loadFromData(QByteArray::fromBase64(keyData.toLatin1()), CryptoKey::PrivateKey, CryptoKey::DER)) {
-            qWarning() << "Cannot load service key from configuration";
+            qWarning() << "Cannot load v2 service key from configuration";
             return;
         }
 

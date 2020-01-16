@@ -120,11 +120,12 @@ void HiddenService::setV3serviceID(const CryptoKey &serviceID)
         return;
     }
 
-    if (!serviceID.isPrivate()) {
-        BUG() << "Cannot create a hidden service with a public key";
+    if (!serviceID.isV3serviceID()) {
+        BUG() << "Cannot set up hidden service with non-v3 service ID";
         return;
     }
 
+    m_v3serviceId = serviceID;
     m_privateKey = serviceID;
     m_hostname = m_privateKey.torServiceID() + QStringLiteral(".onion");
     emit privateKeyChanged();
