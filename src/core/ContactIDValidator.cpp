@@ -34,6 +34,7 @@
 
 // 2-7, not 0-9, as base32 only contains A-Z 2-7
 static QRegularExpression regex(QStringLiteral("(torsion|ricochet):([a-z2-7]{16})"));
+static QRegularExpression regexV3(QStringLiteral("(torsion|ricochet):([a-z2-7]{56})"));
 
 ContactIDValidator::ContactIDValidator(QObject *parent)
     : QRegularExpressionValidator(parent), m_uniqueIdentity(0)
@@ -83,7 +84,7 @@ void ContactIDValidator::fixup(QString &text) const
 
 bool ContactIDValidator::isValidID(const QString &text)
 {
-    return regex.match(text).hasMatch();
+    return (regex.match(text).hasMatch() || regexV3.match(text).hasMatch());
 }
 
 QString ContactIDValidator::hostnameFromID(const QString &ID)
@@ -101,7 +102,7 @@ QString ContactIDValidator::idFromHostname(const QString &hostname)
 
     if (re.size() != 16)
     {
-        if (re.size() == 22 && re.toLower().endsWith(QLatin1String(".onion")))
+        if ((re.size() == 22 || re.size() == 62) && re.toLower().endsWith(QLatin1String(".onion")))
             re.chop(6);
         else
             return QString();

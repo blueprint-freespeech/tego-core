@@ -80,29 +80,36 @@ UserIdentity *UserIdentity::createIdentity(int uniqueID, const QString &dataDire
 void UserIdentity::setupService()
 {
     QString keyData = m_settings->read("serviceKey").toString();
+    QString v3serviceIdData = m_settings->read("V3serviceId").toString();
     QString legacyDir = m_settings->read("dataDirectory").toString();
 
     if (!keyData.isEmpty()) {
         // TODO: add v3 support: by checking keyData length we know it's v3 or v2
         // FIXME: need to add loadfromfile() inside loadfromdatav3() or not ?
-        CryptoKey key;
-        if (keyData.size() == 88) {
-            // v3
-//            if (!key.loadFromDataV3(keyData.toLatin1().toStdString(), CryptoKey::V3PrivateKey)) {
-//                qWarning() << "Cannot load v3 service key from configuration";
-//                return;
-//            }
-//            else {
-//
-//            }
+        if (keyData.size() == CryptoKey::V3PrivateKeyLength) {
+            // for V3 key and serviceID
+            CryptoKey v3privateKey;
+            CryptoKey v3serviceId;
+            bool privateKeyLoaded = v3privateKey.loadFromDataV3(
+                    keyData.toLatin1().toStdString(), CryptoKey::V3PrivateKey);
+            bool serviceIdLoaded = v3serviceId.loadFromDataV3(
+                    v3serviceIdData.toLatin1().toStdString(), CryptoKey::V3ServiceID);
+            if (!privateKeyLoaded || !serviceIdLoaded) {
+                qWarning() << "Cannot load v3 private key or service id from configuration";
+                return;
+            }
+            m_hiddenService = new Tor::HiddenService(v3privateKey, v3serviceId, legacyDir, this);
+        } else {
+            // for V2 keys
+            CryptoKey key;
+            if (!key.loadFromData(QByteArray::fromBase64(keyData.toLatin1()), CryptoKey::PrivateKey, CryptoKey::DER)) {
+                qWarning() << "Cannot load v2 service key from configuration";
+                return;
+            }
+            m_hiddenService = new Tor::HiddenService(key, legacyDir, this);
         }
-        if (!key.loadFromData(QByteArray::fromBase64(keyData.toLatin1()), CryptoKey::PrivateKey, CryptoKey::DER)) {
-            qWarning() << "Cannot load v2 service key from configuration";
-            return;
-        }
-
-        m_hiddenService = new Tor::HiddenService(key, legacyDir, this);
-    } else if (!legacyDir.isEmpty() && QFile::exists(legacyDir + QLatin1String("/private_key"))) {
+    } else if (!legacyDir.isEmpty() && QFile::exists(
+            legacyDir + QLatin1String("/private_key"))) {
         qDebug() << "Attempting to load key from legacy filesystem format in" << legacyDir;
 
         CryptoKey key;
@@ -119,10 +126,23 @@ void UserIdentity::setupService()
         return;
     } else {
         m_hiddenService = new Tor::HiddenService(legacyDir, this);
+        // the service key and service ID in ricochet.json is written here
         connect(m_hiddenService, &Tor::HiddenService::privateKeyChanged, this,
             [&]() {
-                QString key = QString::fromLatin1(m_hiddenService->privateKey().encodedPrivateKey(CryptoKey::DER).toBase64());
-                m_settings->write("serviceKey", key);
+                if (m_hiddenService->V3serviceId().isLoaded()) {
+                    m_settings->write("V3serviceId", QString::fromStdString(
+                            m_hiddenService->V3serviceId().getV3ServiceId()));
+                }
+                if (m_hiddenService->privateKey().isLoaded()) {
+                    if (m_hiddenService->privateKey().getVersion() == CryptoKey::Version::V2) {
+                        QString key = QString::fromLatin1(m_hiddenService->
+                                privateKey().encodedPrivateKey(CryptoKey::DER).toBase64());
+                        m_settings->write("serviceKey", key);
+                    } else if (m_hiddenService->privateKey().getVersion() == CryptoKey::Version::V3) {
+                        m_settings->write("serviceKey", QString::fromLatin1(m_hiddenService->
+                        privateKey().encodedPrivateKey(CryptoKey::V3ENCODED).toBase64()));
+                    }
+                }
             }
         );
     }
