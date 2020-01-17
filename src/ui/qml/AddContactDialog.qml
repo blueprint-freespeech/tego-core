@@ -56,7 +56,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             readOnly: true
             text: userIdentity.contactID
-            horizontalAlignment: Qt.AlignHCenter
+            horizontalAlignment: Qt.AlignLeft
         }
 
         Item { height: 1 }

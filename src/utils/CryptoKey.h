@@ -95,6 +95,8 @@ public:
     bool isV3serviceID() const;
 
     std::string getV3PublicKey() const;
+    std::string getV3ServiceId() const { return this->v3serviceID; }
+    Version getVersion() const { return this->version; }
     QByteArray getDecodedV3PublicKey() const;
     QByteArray getDecodedV3PrivateKey() const;
     QByteArray publicKeyDigest() const;

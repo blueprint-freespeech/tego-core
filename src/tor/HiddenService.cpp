@@ -53,6 +53,7 @@ HiddenService::HiddenService(const QString &path, QObject *parent)
     /* Set the initial status and, if possible, load the hostname */
     if (QDir(m_dataPath).exists(QLatin1String("private_key"))) {
         loadPrivateKey();
+
         if (!m_hostname.isEmpty())
             m_status = Offline;
     }
@@ -69,7 +70,7 @@ HiddenService::HiddenService(const CryptoKey &privateKey, const CryptoKey &servi
                              QObject *parent):
                              HiddenService(privateKey, dataPath, parent)
 {
-
+    setV3serviceID(serviceID);
 }
 
 void HiddenService::setStatus(Status newStatus)
@@ -109,25 +110,18 @@ void HiddenService::setPrivateKey(const CryptoKey &key)
         return;
     }
     m_privateKey = key;
-    m_hostname = m_privateKey.torServiceID() + QStringLiteral(".onion");
     emit privateKeyChanged();
 }
 
 void HiddenService::setV3serviceID(const CryptoKey &serviceID)
 {
-    if (m_privateKey.isLoaded()) {
-        BUG() << "Cannot change the private key on an existing HiddenService";
-        return;
-    }
-
     if (!serviceID.isV3serviceID()) {
         BUG() << "Cannot set up hidden service with non-v3 service ID";
         return;
     }
 
     m_v3serviceId = serviceID;
-    m_privateKey = serviceID;
-    m_hostname = m_privateKey.torServiceID() + QStringLiteral(".onion");
+    m_hostname = serviceID.torServiceID() + QStringLiteral(".onion");
     emit privateKeyChanged();
 }
 
