@@ -77,6 +77,7 @@ public:
     const QString &dataPath() const { return m_dataPath; }
 
     CryptoKey privateKey() { return m_privateKey; }
+    CryptoKey V3serviceId() {return m_v3serviceId; }
     void setPrivateKey(const CryptoKey &privateKey);
     void setV3serviceID(const CryptoKey &serviceID);
 
