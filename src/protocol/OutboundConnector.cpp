@@ -92,6 +92,7 @@ OutboundConnector::~OutboundConnector()
 
 void OutboundConnector::setAuthPrivateKey(const CryptoKey &key)
 {
+    //todo auth change condition to add V3 support
     if (!key.isLoaded() || !key.isPrivate()) {
         BUG() << "Cannot make outbound connection without a valid private key";
         return;
