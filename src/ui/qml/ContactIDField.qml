@@ -29,6 +29,7 @@ FocusScope {
             placeholderText: "ricochet:"
             focus: true
 
+
             onTextChanged: errorBubble.clear()
 
             ContactIDValidator {
