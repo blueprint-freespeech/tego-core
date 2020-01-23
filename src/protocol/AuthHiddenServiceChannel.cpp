@@ -201,6 +201,7 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     }
 
     // get the public key
+    // TODO: check if V3 public key is empty, if it isn't then we are using v3
     QByteArray publicKey = d->privateKey.encodedPublicKey(CryptoKey::DER);
     if (publicKey.size() > 150) {
         BUG() << "Unexpected size for encoded public key";
@@ -254,13 +255,14 @@ void AuthHiddenServiceChannel::sendAuthMessage()
  */
 QByteArray AuthHiddenServiceChannelPrivate::getProofData(const QString &client)
 {
-    // TODO: add v3 compatibility
-    // TODO: change if condition to make v3 compatible. V2 has 16 chars ricochet: <ID>. V3 has 52.
     // FIXME: Currently, clientHostname is empty string, client didn't get passed correctly from parameters.
-    QByteArray serverHostname = connection->serverHostname().toLatin1().mid(0, 16);
+    if(!client.endsWith(QLatin1String(".onion")));
+        return QByteArray();
+    QByteArray serverHostname = connection->serverHostname().replace(QLatin1String(".onion"), QLatin1String("")).toLatin1();
     QByteArray clientHostname = client.toLatin1();
 
-    if (clientHostname.size() != 16 || serverHostname.size() != 16) {
+    if ((clientHostname.size() != 16 || serverHostname.size() != 16) || 
+        (clientHostname.size() != 56 || serverHostname.size() != 56)) {
         BUG() << "AuthHiddenServiceChannel can't figure out the client and server hostnames";
         return QByteArray();
     }
