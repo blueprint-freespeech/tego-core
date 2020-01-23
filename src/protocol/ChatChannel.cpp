@@ -118,7 +118,7 @@ bool ChatChannel::sendChatMessageWithId(QString text, QDateTime time, MessageId 
     if (text.isEmpty()) {
         BUG() << "Chat message is empty, and it should've been discarded";
         return false;
-    } else if (text.size() > MessageMaxCharacters) {
+    } else if (text.size() > MessageMaxCharacters || text.size() < 0) {
         BUG() << "Chat message is too long (" << text.size() << "characters), and it should've been limited already. Truncated.";
         text.truncate(MessageMaxCharacters);
     }
@@ -152,7 +152,9 @@ void ChatChannel::handleChatMessage(const Data::Chat::ChatMessage &message)
     } else if (text.isEmpty()) {
         qWarning() << "Rejected empty chat message";
         response->set_accepted(false);
-    } else if (text.size() > MessageMaxCharacters) {
+    } else if (text.size() > MessageMaxCharacters || text.size() < 0) { // QT sdk specifies that QString::size returns an int
+                                                                        // Check that the message isn't *ridiculously* huge and
+                                                                        // hasn't overflowed the return int
         qWarning() << "Rejected oversize chat message of" << text.size() << "characters";
         response->set_accepted(false);
     } else {
