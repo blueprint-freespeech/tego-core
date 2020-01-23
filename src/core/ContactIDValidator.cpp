@@ -33,7 +33,11 @@
 #include "ContactIDValidator.h"
 
 // 2-7, not 0-9, as base32 only contains A-Z 2-7
+<<<<<<< HEAD
 static QRegularExpression regex(QStringLiteral("(torsion|ricochet):(([a-z2-7]{56})|([a-z2-7]{16}))"));
+=======
+static QRegularExpression regex(QStringLiteral("(torsion|ricochet):([a-z2-7]{56}|[a-z2-7]{16})"));
+>>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
 
 ContactIDValidator::ContactIDValidator(QObject *parent)
     : QRegularExpressionValidator(parent), m_uniqueIdentity(0)
@@ -83,7 +87,11 @@ void ContactIDValidator::fixup(QString &text) const
 
 bool ContactIDValidator::isValidID(const QString &text)
 {
+<<<<<<< HEAD
     return regex.match(text).hasMatch();
+=======
+    return (regex.match(text).hasMatch());
+>>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
 }
 
 QString ContactIDValidator::hostnameFromID(const QString &ID)

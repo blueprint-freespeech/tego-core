@@ -89,6 +89,7 @@ void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key)
         return;
     }
 
+    //todo auth change condition to add V3 support
     if (!key.isLoaded() || !key.isPrivate()) {
         BUG() << "AuthHiddenServiceChannel cannot authenticate without a valid private key";
         return;
@@ -148,6 +149,7 @@ bool AuthHiddenServiceChannel::allowOutboundChannelRequest(Data::Control::OpenCh
 {
     Q_D(AuthHiddenServiceChannel);
 
+    //todo auth change condition to add V3 support
     if (!d->privateKey.isLoaded()) {
         BUG() << "AuthHiddenServiceChannel can't be opened without a private key";
         return false;
@@ -164,6 +166,7 @@ bool AuthHiddenServiceChannel::processChannelOpenResult(const Data::Control::Cha
 {
     Q_D(AuthHiddenServiceChannel);
 
+    // cookies are randomly generated with length 16
     if (result->opened()) {
         std::string cookie = result->GetExtension(Data::AuthHiddenService::server_cookie);
         if (cookie.size() != 16) {
@@ -194,6 +197,7 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     if (!isOpened())
         return;
 
+    // cookie length is 16 for both v2 and v3
     if (d->clientCookie.size() != 16 || d->serverCookie.size() != 16) {
         BUG() << "AuthHiddenServiceChannel can't create a proof without valid cookies";
         closeChannel();
@@ -201,7 +205,11 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     }
 
     // get the public key
+<<<<<<< HEAD
     // TODO: check if V3 public key is empty, if it isn't then we are using v3
+=======
+    //todo auth check here to see if the key is a v3 service id, to get the v3 public key
+>>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
     QByteArray publicKey = d->privateKey.encodedPublicKey(CryptoKey::DER);
     if (publicKey.size() > 150) {
         BUG() << "Unexpected size for encoded public key";
@@ -218,6 +226,7 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     //    message: proof data
     QByteArray signature;
     //FIXME: d->privateKey is a CryptoKey instance with v3serviceID=""
+    //todo auth check here to see if the key is a v3 service id, to get the v3 public key
     QByteArray proofData = d->getProofData(d->privateKey.torServiceID());
     if (!proofData.isEmpty()) {
         // make a HMAC of the proof data
@@ -261,7 +270,11 @@ QByteArray AuthHiddenServiceChannelPrivate::getProofData(const QString &client)
     QByteArray serverHostname = connection->serverHostname().replace(QLatin1String(".onion"), QLatin1String("")).toLatin1();
     QByteArray clientHostname = client.toLatin1();
 
+<<<<<<< HEAD
     if ((clientHostname.size() != 16 || serverHostname.size() != 16) || 
+=======
+    if ((clientHostname.size() != 16 || serverHostname.size() != 16) ||
+>>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
         (clientHostname.size() != 56 || serverHostname.size() != 56)) {
         BUG() << "AuthHiddenServiceChannel can't figure out the client and server hostnames";
         return QByteArray();
