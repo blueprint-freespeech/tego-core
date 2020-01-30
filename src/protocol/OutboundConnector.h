@@ -77,7 +77,7 @@ public:
     QString errorMessage() const;
 
     bool connectToHost(const QString &hostname, quint16 port);
-    void setAuthPrivateKey(const CryptoKey &key);
+    void setAuthPrivateKey(const CryptoKey &key, const CryptoKey &v3serviceID);
 
     /* Take ownership of the Connection object when Ready
      *

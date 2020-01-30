@@ -4,11 +4,7 @@ import QtQuick.Layouts 1.0
 
 ApplicationWindow {
     id: addContactWindow
-<<<<<<< HEAD
     width: 620
-=======
-    width: 640
->>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
     height: 300
     minimumWidth: width
     maximumWidth: width
