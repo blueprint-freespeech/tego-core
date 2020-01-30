@@ -50,6 +50,7 @@ class AuthHiddenServiceChannelPrivate : public ChannelPrivate
 {
 public:
     CryptoKey privateKey;
+    CryptoKey v3serviceID;
     QByteArray clientCookie, serverCookie;
     bool accepted;
 
@@ -81,7 +82,7 @@ AuthHiddenServiceChannel::AuthHiddenServiceChannel(Direction dir, Connection *co
     );
 }
 
-void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key)
+void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key, const CryptoKey &v3serviceID)
 {
     Q_D(AuthHiddenServiceChannel);
     if (isOpened()) {
@@ -94,8 +95,9 @@ void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key)
         BUG() << "AuthHiddenServiceChannel cannot authenticate without a valid private key";
         return;
     }
-
-    d->privateKey = key;
+    d->v3serviceID = v3serviceID;
+    if(key.getDecodedHexV3PrivateKey().data() != "")
+        d->privateKey.loadFromDataV3(key.getDecodedHexV3PrivateKey().data(), CryptoKey::V3ServiceID);
 }
 
 bool AuthHiddenServiceChannel::allowInboundChannelRequest(const Data::Control::OpenChannel *request, Data::Control::ChannelResult *result)
@@ -149,7 +151,11 @@ bool AuthHiddenServiceChannel::allowOutboundChannelRequest(Data::Control::OpenCh
 {
     Q_D(AuthHiddenServiceChannel);
 
-    //todo auth change condition to add V3 support
+    //todo THIS NEEDS TO BE FIXED
+    // IT IS BAD
+    // DO NOT USE THIS IN PRODUCTION
+    // PLEASE
+    d->privateKey.v3privateKey = d->privateKey.v3serviceID;
     if (!d->privateKey.isLoaded()) {
         BUG() << "AuthHiddenServiceChannel can't be opened without a private key";
         return false;

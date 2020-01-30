@@ -49,6 +49,7 @@ public:
     static const int V3PublicKeyLength = 52;
 
     static const int V3PrivateKeyByteLength = 64;
+    static const int V3ServiceIDByteLength = 64;
     static const int V3PublicKeyByteLength = 32;
     static const int V3SignatureByteLength = 64;
 
@@ -99,6 +100,7 @@ public:
     Version getVersion() const { return this->version; }
     QByteArray getDecodedV3PublicKey() const;
     QByteArray getDecodedV3PrivateKey() const;
+    QByteArray getDecodedHexV3PrivateKey() const;
     QByteArray publicKeyDigest() const;
     QByteArray encodedPublicKey(KeyFormat format) const;
     QByteArray encodedPrivateKey(KeyFormat format) const;
@@ -127,7 +129,7 @@ private:
 
     QExplicitlySharedDataPointer<Data> d;
 
-
+public:
     Version version;
     std::string v3privateKey;
     std::string v3publicKey;

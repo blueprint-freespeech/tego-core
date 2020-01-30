@@ -54,6 +54,7 @@ public:
     quint16 port;
     OutboundConnector::Status status;
     CryptoKey authPrivateKey;
+    CryptoKey authV3ServiceID;
     QString errorMessage;
     QTimer errorRetryTimer;
     int errorRetryCount;
@@ -90,7 +91,7 @@ OutboundConnector::~OutboundConnector()
 {
 }
 
-void OutboundConnector::setAuthPrivateKey(const CryptoKey &key)
+void OutboundConnector::setAuthPrivateKey(const CryptoKey &key, const CryptoKey &v3serviceID)
 {
     //todo auth change condition to add V3 support
     if (!key.isLoaded() || !key.isPrivate()) {
@@ -99,6 +100,7 @@ void OutboundConnector::setAuthPrivateKey(const CryptoKey &key)
     }
 
     d->authPrivateKey = key;
+    d->authV3ServiceID = v3serviceID;
 }
 
 bool OutboundConnector::connectToHost(const QString &hostname, quint16 port)
@@ -302,7 +304,7 @@ void OutboundConnectorPrivate::startAuthentication()
         }
     );
 
-    authChannel->setPrivateKey(authPrivateKey);
+    authChannel->setPrivateKey(authPrivateKey, authV3ServiceID);
     if (!authChannel->openChannel()) {
         setError(QStringLiteral("Unable to open authentication channel"));
     }

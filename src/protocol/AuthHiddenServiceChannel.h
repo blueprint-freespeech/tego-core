@@ -51,7 +51,7 @@ class AuthHiddenServiceChannel : public Channel
 public:
     explicit AuthHiddenServiceChannel(Direction direction, Connection *connection);
 
-    void setPrivateKey(const CryptoKey &key);
+    void setPrivateKey(const CryptoKey &key, const CryptoKey &v3serviceID);
 
 signals:
     void authSuccessful();

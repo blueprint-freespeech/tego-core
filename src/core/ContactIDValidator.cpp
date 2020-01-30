@@ -83,7 +83,7 @@ void ContactIDValidator::fixup(QString &text) const
 
 bool ContactIDValidator::isValidID(const QString &text)
 {
-    return (regex.match(text).hasMatch());
+    return regex.match(text).hasMatch();
 }
 
 QString ContactIDValidator::hostnameFromID(const QString &ID)
