@@ -50,6 +50,7 @@ class AuthHiddenServiceChannelPrivate : public ChannelPrivate
 {
 public:
     CryptoKey privateKey;
+    CryptoKey v3serviceID;
     QByteArray clientCookie, serverCookie;
     bool accepted;
 
@@ -81,7 +82,7 @@ AuthHiddenServiceChannel::AuthHiddenServiceChannel(Direction dir, Connection *co
     );
 }
 
-void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key)
+void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key, const CryptoKey &v3serviceID)
 {
     Q_D(AuthHiddenServiceChannel);
     if (isOpened()) {
@@ -94,8 +95,9 @@ void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key)
         BUG() << "AuthHiddenServiceChannel cannot authenticate without a valid private key";
         return;
     }
-
-    d->privateKey = key;
+    d->v3serviceID = v3serviceID;
+    if(key.getDecodedHexV3PrivateKey().data() != "")
+        d->privateKey.loadFromDataV3(key.getDecodedHexV3PrivateKey().data(), CryptoKey::V3ServiceID);
 }
 
 bool AuthHiddenServiceChannel::allowInboundChannelRequest(const Data::Control::OpenChannel *request, Data::Control::ChannelResult *result)
@@ -149,7 +151,11 @@ bool AuthHiddenServiceChannel::allowOutboundChannelRequest(Data::Control::OpenCh
 {
     Q_D(AuthHiddenServiceChannel);
 
-    //todo auth change condition to add V3 support
+    //todo THIS NEEDS TO BE FIXED
+    // IT IS BAD
+    // DO NOT USE THIS IN PRODUCTION
+    // PLEASE
+    d->privateKey.v3privateKey = d->privateKey.v3serviceID;
     if (!d->privateKey.isLoaded()) {
         BUG() << "AuthHiddenServiceChannel can't be opened without a private key";
         return false;
@@ -205,11 +211,7 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     }
 
     // get the public key
-<<<<<<< HEAD
-    // TODO: check if V3 public key is empty, if it isn't then we are using v3
-=======
     //todo auth check here to see if the key is a v3 service id, to get the v3 public key
->>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
     QByteArray publicKey = d->privateKey.encodedPublicKey(CryptoKey::DER);
     if (publicKey.size() > 150) {
         BUG() << "Unexpected size for encoded public key";
@@ -270,11 +272,7 @@ QByteArray AuthHiddenServiceChannelPrivate::getProofData(const QString &client)
     QByteArray serverHostname = connection->serverHostname().replace(QLatin1String(".onion"), QLatin1String("")).toLatin1();
     QByteArray clientHostname = client.toLatin1();
 
-<<<<<<< HEAD
     if ((clientHostname.size() != 16 || serverHostname.size() != 16) || 
-=======
-    if ((clientHostname.size() != 16 || serverHostname.size() != 16) ||
->>>>>>> accab653a2435d2fc15de6b62fe09667bab437c4
         (clientHostname.size() != 56 || serverHostname.size() != 56)) {
         BUG() << "AuthHiddenServiceChannel can't figure out the client and server hostnames";
         return QByteArray();

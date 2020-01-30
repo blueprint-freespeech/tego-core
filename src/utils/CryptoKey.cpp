@@ -188,8 +188,12 @@ bool CryptoKey::isLoaded() const{
         //TODO: for v3
         //FIXME: logic for v3 need to be corrected
         if (v3privateKey.empty()) {
+            //if(v3ServiceID.length() == CryptoKey::V3ServiceIDByteLength){
+            //    
+            //}
             // v3 private key is empty. check service id
-            return v3serviceID.length() == CryptoKey::V3ServiceIDLength;
+            return (this->v3serviceID.length() == CryptoKey::V3ServiceIDLength) || 
+                    (this->v3serviceID.length() == CryptoKey::V3ServiceIDByteLength);
         }
         else {
             // v3 private key is not empty. check v3 private key
@@ -299,6 +303,20 @@ QByteArray CryptoKey::getDecodedV3PrivateKey() const{
 //    }
 }
 
+QByteArray CryptoKey::getDecodedHexV3PrivateKey() const{
+//    if (!isLoaded() || version != V3 || !isPrivate()) {
+//        return QByteArray();
+//    } else {
+        QByteArray stringBytes = QByteArray::fromStdString(this->v3privateKey);
+        QByteArray bytes(QByteArray::fromHex(stringBytes.toHex()));
+        // bytes.toHex().constData() will show the char* of the hex representation of decoded key
+        if (bytes.size() == CryptoKey::V3PrivateKeyByteLength) {
+            return bytes;
+        } else {
+            return QByteArray();
+        }
+//  
+}
 /**
  * return the number of bits of s v2 key
  * @return number of bits
@@ -754,4 +772,8 @@ bool base32_decode(char *dest, unsigned int destlen, const char *src, unsigned i
 
     delete[] tmp;
     return true;
+}
+
+std::string decode_base32(std::string encoded){
+    
 }

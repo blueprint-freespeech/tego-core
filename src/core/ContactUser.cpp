@@ -160,7 +160,7 @@ void ContactUser::updateOutgoingSocket()
     if (!m_outgoingSocket) {
         m_outgoingSocket = new Protocol::OutboundConnector(this);
         //todo auth change here: if v3: pass both private and public key
-        m_outgoingSocket->setAuthPrivateKey(identity->hiddenService()->privateKey());
+        m_outgoingSocket->setAuthPrivateKey(identity->hiddenService()->privateKey(), identity->hiddenService()->V3serviceId());
         connect(m_outgoingSocket, &Protocol::OutboundConnector::ready, this,
             [this]() {
                 assignConnection(m_outgoingSocket->takeConnection());
