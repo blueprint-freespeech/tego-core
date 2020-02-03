@@ -36,6 +36,10 @@
 #include <QObject>
 #include <QStringList>
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(tor_manager);
+
 namespace Tor
 {
 

@@ -51,6 +51,14 @@
 #include <QStandardPaths>
 #include <openssl/crypto.h>
 
+#include <QLoggingCategory>
+
+
+
+Q_DECLARE_LOGGING_CATEGORY(ricochet_main);
+
+Q_LOGGING_CATEGORY(ricochet_main, "ricochet.main");
+
 static bool initSettings(SettingsFile *settings, QLockFile **lockFile, QString &errorMessage);
 static bool importLegacySettings(SettingsFile *settings, const QString &oldPath);
 static void initTranslation();
@@ -72,13 +80,16 @@ int main(int argc, char *argv[])
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     a.setWindowIcon(QIcon(QStringLiteral(":/icons/ricochet_refresh.svg")));
 #endif
+    qCDebug(ricochet_main) << "start app" ;
 
     QScopedPointer<SettingsFile> settings(new SettingsFile);
     SettingsObject::setDefaultFile(settings.data());
 
     QString error;
     QLockFile *lock = 0;
+    qCDebug(ricochet_main) << "init settings" ;
     if (!initSettings(settings.data(), &lock, error)) {
+        qCCritical(ricochet_main) << "init settings failed" ;
         QMessageBox::critical(0, qApp->translate("Main", "Ricochet Error"), error);
         return 1;
     }
@@ -103,7 +114,7 @@ int main(int argc, char *argv[])
     torManager->setDataDirectory(QFileInfo(settings->filePath()).path() + QStringLiteral("/tor/"));
     torControl = torManager->control();
     torManager->start();
-
+    qCDebug(ricochet_main) << "started tor manager";
     /* Identities */
     identityManager = new IdentityManager;
     QScopedPointer<IdentityManager> scopedIdentityManager(identityManager);

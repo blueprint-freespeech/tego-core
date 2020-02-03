@@ -39,6 +39,7 @@
 #include <openssl/bio.h>
 #include <openssl/pem.h>
 #include <QMessageBox>
+#include <memory>
 extern "C" {
     #include "../lib/onion_ed25519_signature/sign.h"
 }
@@ -197,6 +198,7 @@ bool CryptoKey::loadFromFile(const QString &path, KeyType type, KeyFormat format
         //todo no V3 implementation for this, since it's not really used
         return true;
     }
+    return false;
 }
 
 /**
@@ -800,6 +802,31 @@ bool base32_decode(char *dest, unsigned int destlen, const char *src, unsigned i
     return true;
 }
 
-std::string decode_base32(std::string encoded){
-    
+template < int a, int b >
+static size_t
+DecodeSize(size_t sz)
+{
+    auto d = div(sz, a);
+    if(d.rem)
+        d.quot++;
+    return b * d.quot;
+}
+
+/// get base32 binary size of encoded input of size sz bytes
+static size_t
+Base32DecodeSize(size_t sz)
+{
+    return DecodeSize< 5, 8 >(sz);
+}
+
+// std::string version of base32_decode
+std::string decode_base32(std::string encoded)
+{
+    const size_t decode_len = Base32DecodeSize(encoded.size());
+    std::shared_ptr<char[]> decoded = std::make_shared<char[]>(decode_len);
+    if(base32_decode(decoded.get(), decode_len, encoded.c_str(), encoded.size()))
+    {
+        return decoded.get();
+    }
+    return "";
 }

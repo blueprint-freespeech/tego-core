@@ -23,7 +23,37 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_package(Qt5 REQUIRED Core REQUIRED Widgets REQUIRED Network REQUIRED Quick REQUIRED)
+
+
+# qt5 modules
+set(MODULES Core Widgets Network Quick)
+foreach(mod IN ITEMS ${MODULES})
+    find_package(Qt5 REQUIRED ${mod} REQUIRED)
+endforeach(mod IN ITEMS ${MODULES})
+
+find_package(Qt5QuickCompiler REQUIRED)
+
+
+
+qtquick_compiler_add_resources(UI_RESOURCES src/ui/qml/qml.qrc)
+
+
+# protocol buffer definitions
+set(PROTO_DEFS 
+    src/protocol/ControlChannel.proto 
+    src/protocol/AuthHiddenService.proto 
+    src/protocol/ChatChannel.proto 
+    src/protocol/ContactRequestChannel.proto
+)
+
+# generate protocol buffer source files
+PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HDR ${PROTO_DEFS})
+
+# exclude generated protobuf files from automoc
+foreach(f IN ITEMS ${PROTO_HDR} ${PROTO_SRC})
+    set_property(SOURCE ${f} PROPERTY SKIP_AUTOGEN ON)
+endforeach()
+
 
 # source file
 set(SOURCES src/main.cpp
@@ -64,6 +94,7 @@ set(SOURCES src/main.cpp
         src/protocol/ChatChannel.cpp
         src/protocol/ContactRequestChannel.cpp
         lib/onion_ed25519_signature/ed25519.c
+        ${PROTO_SRC}
         )
 set(HEADERS src/protocol/Channel.h
         src/protocol/Channel_p.h
@@ -116,8 +147,12 @@ set(HEADERS src/protocol/Channel.h
         lib/onion_ed25519_signature/ed25519-hash.h
         lib/onion_ed25519_signature/modm-donna-64bit.h
         lib/onion_ed25519_signature/orconfig.h
+        ${PROTO_HDR}
         )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src ${Protobuf_INCLUDE_DIRS} ${QT5_DIR})
-add_executable(ricochet-refresh ${SOURCES} ${HEADERS})
+add_executable(ricochet-refresh ${SOURCES} ${HEADERS} ${UI_RESOURCES})
+target_link_libraries(ricochet-refresh protobuf)
 target_link_libraries(ricochet-refresh Qt5::Widgets Qt5::Network OpenSSL::Crypto)
 target_link_libraries(ricochet-refresh Qt5::Widgets Qt5::Network Qt5::Quick Qt5::Core OpenSSL::Crypto)
+
+qt5_use_modules(ricochet-refresh ${MODULES})
