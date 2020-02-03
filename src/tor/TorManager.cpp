@@ -41,6 +41,8 @@
 
 using namespace Tor;
 
+Q_LOGGING_CATEGORY(tor_manager, "ricochet.tor");
+
 namespace Tor
 {
 
@@ -222,7 +224,7 @@ void TorManager::start()
 
 void TorManagerPrivate::processStateChanged(int state)
 {
-    qDebug() << Q_FUNC_INFO << state << TorProcess::Ready << process->controlPassword() << process->controlHost() << process->controlPort();
+    qCDebug(tor_manager) << Q_FUNC_INFO << state << TorProcess::Ready << process->controlPassword() << process->controlHost() << process->controlPort();
     if (state == TorProcess::Ready) {
         control->setAuthPassword(process->controlPassword());
         control->connect(process->controlHost(), process->controlPort());
@@ -231,13 +233,13 @@ void TorManagerPrivate::processStateChanged(int state)
 
 void TorManagerPrivate::processErrorChanged(const QString &errorMessage)
 {
-    qDebug() << "tor error:" << errorMessage;
+    qCWarning(tor_manager)<< errorMessage;
     setError(errorMessage);
 }
 
 void TorManagerPrivate::processLogMessage(const QString &message)
 {
-    qDebug() << "tor:" << message;
+    qCDebug(tor_manager) << message;
     if (logMessages.size() >= 50)
         logMessages.takeFirst();
     logMessages.append(message);
@@ -310,7 +312,7 @@ bool TorManagerPrivate::createDefaultTorrc(const QString &path)
         "SocksPort auto\n"
         "AvoidDiskWrites 1\n"
         "DisableNetwork 1\n"
-        "HiddenServiceDir /var/lib/tor/hidden_service\n"
+        "HiddenServiceDir ./tor/hidden_service\n"
         "HiddenServicePort 45678\n"
         "HiddenServiceVersion 3\n"
         "__ReloadTorrcOnSIGHUP 0\n";
