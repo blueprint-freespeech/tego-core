@@ -43,5 +43,6 @@ CONFIG(hardened) {
     # _FORTIFY_SOURCE requires -O, so only use on release builds
     CONFIG(release,debug|release):QMAKE_CXXFLAGS *= -D_FORTIFY_SOURCE=2
     # Linux specific
-    unix:!macx:QMAKE_LFLAGS *= -pie -Wl,-z,relro,-z,now
+    unix:!macx:!solaris:QMAKE_LFLAGS *= -pie -Wl,-z,relro,-z,now
+    solaris:QMAKE_LFLAGS *= -Wl,-z,aslr,-z,now
 }
