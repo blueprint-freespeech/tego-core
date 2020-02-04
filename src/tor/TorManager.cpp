@@ -312,9 +312,6 @@ bool TorManagerPrivate::createDefaultTorrc(const QString &path)
         "SocksPort auto\n"
         "AvoidDiskWrites 1\n"
         "DisableNetwork 1\n"
-        "HiddenServiceDir ./tor/hidden_service\n"
-        "HiddenServicePort 45678\n"
-        "HiddenServiceVersion 3\n"
         "__ReloadTorrcOnSIGHUP 0\n";
 
     QFile file(path);
