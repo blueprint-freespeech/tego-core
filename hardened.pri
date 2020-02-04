@@ -18,7 +18,8 @@ HARDENED_MINGW_64ASLR_FLAGS = -Wl,--dynamicbase -Wl,--high-entropy-va
 # Run tests and apply options where possible
 CONFIG(hardened) {
     # mingw is always PIC, and complains about the flag
-    !mingw:HARDEN_FLAGS = -fPIC
+    # Microsoft C++ doesn't even know what PIC _is_
+    !mingw:!win32:HARDEN_FLAGS = -fPIC
 
     CONFIG(debug,debug|release): qtCompileTest(sanitize):HARDEN_FLAGS += $$HARDENED_SANITIZE_FLAGS
     qtCompileTest(sanitize-ubsan):HARDEN_FLAGS += $$HARDENED_SANITIZE_UBSAN_FLAGS
