@@ -37,6 +37,11 @@
 #include "utils/CryptoKey.h"
 #include "AuthHiddenService.pb.h"
 
+
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(hs_auth);
+
 namespace Protocol
 {
 

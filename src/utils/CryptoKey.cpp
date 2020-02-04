@@ -574,13 +574,14 @@ bool CryptoKey::verifySHA256(const QByteArray &digest, QByteArray signature) con
                             reinterpret_cast<uchar *>(signature.data()), signature.size(), d->key);
     } else if (this->keyType == V3ServiceID) {
         //call verifying function for v3 keys
-        //todo auth check if this works: try getEncodedV3PublicKey and decoded
-        result = ed25519_sign_open(reinterpret_cast<const uchar *>(digest.constData()), digest.size(),
-                                   reinterpret_cast<const uchar *>(this->getEncodedV3PublicKey().c_str()),
-                                   reinterpret_cast<const uchar *>(signature.constData()));
-    } else {
+        result = ed25519_sign_open(reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
+                                   reinterpret_cast<const uchar*>(v3publicKey.c_str()),
+                                   reinterpret_cast<const uchar*>(signature.constData())) != -1;
+    }
+    else {
         return false;
     }
+    qDebug() << "result=" << result;
     return result == 1;
 }
 
@@ -823,10 +824,11 @@ Base32DecodeSize(size_t sz)
 std::string decode_base32(std::string encoded)
 {
     const size_t decode_len = Base32DecodeSize(encoded.size());
-    std::shared_ptr<char[]> decoded = std::make_shared<char[]>(decode_len);
-    if(base32_decode(decoded.get(), decode_len, encoded.c_str(), encoded.size()))
+    char * ptr = new char[decode_len];
+    if(base32_decode(ptr, decode_len, encoded.c_str(), encoded.size()))
     {
-        return decoded.get();
+        return ptr;
     }
+    delete [] ptr;
     return "";
 }
