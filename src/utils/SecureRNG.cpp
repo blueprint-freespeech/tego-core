@@ -37,6 +37,7 @@
 #include <limits.h>
 
 #ifdef Q_OS_WIN
+#include <windows.h>
 #include <wincrypt.h>
 #endif
 
