@@ -38,9 +38,12 @@
 #include "utils/CryptoKey.h"
 #include "utils/Useful.h"
 #include <QMessageAuthenticationCode>
+
 extern "C" {
     #include "../lib/onion_ed25519_signature/sign.h"
 }
+
+Q_LOGGING_CATEGORY(hs_auth, "ricochet.tor.hsauth");
 
 using namespace Protocol;
 
@@ -109,21 +112,21 @@ bool AuthHiddenServiceChannel::allowInboundChannelRequest(const Data::Control::O
 
     if (connection()->direction() != Connection::ServerSide) {
         // Hidden service authentication is only allowed from the client-side connection
-        qDebug() << "Rejecting AuthHiddenServiceChannel from server side";
+        qCDebug(hs_auth) << "Rejecting AuthHiddenServiceChannel from server side";
         result->set_common_error(ChannelResult::BadUsageError);
         return false;
     }
 
     if (connection()->hasAuthenticated(Connection::HiddenServiceAuth)) {
         // You can only authenticate a connection once
-        qDebug() << "Rejecting AuthHiddenServiceChannel on authenticated connection";
+        qCDebug(hs_auth)  << "Rejecting AuthHiddenServiceChannel on authenticated connection";
         result->set_common_error(ChannelResult::BadUsageError);
         return false;
     }
 
     if (connection()->findChannel<AuthHiddenServiceChannel>()) {
         // Refuse if another channel already exists
-        qDebug() << "Rejecting instance of AuthHiddenServiceChannel on a connection that already has one";
+        qCDebug(hs_auth) << "Rejecting instance of AuthHiddenServiceChannel on a connection that already has one";
         result->set_common_error(ChannelResult::BadUsageError);
         return false;
     }
@@ -131,7 +134,7 @@ bool AuthHiddenServiceChannel::allowInboundChannelRequest(const Data::Control::O
     // Store client cookie
     std::string clientCookie = request->GetExtension(Data::AuthHiddenService::client_cookie);
     if (clientCookie.size() != 16) {
-        qDebug() << "Received OpenChannel for" << type() << "with no valid client_cookie";
+        qCDebug(hs_auth)  << "Received OpenChannel for" << type() << "with no valid client_cookie";
         result->set_common_error(ChannelResult::BadUsageError);
         return false;
     }
@@ -142,7 +145,7 @@ bool AuthHiddenServiceChannel::allowInboundChannelRequest(const Data::Control::O
     if (d->serverCookie.isEmpty())
         return false;
 
-    qDebug() << "Accepted inbound AuthHiddenServiceChannel";
+    qCDebug(hs_auth) << "Accepted inbound AuthHiddenServiceChannel";
 
     result->SetExtension(Data::AuthHiddenService::server_cookie, std::string(d->serverCookie.constData(), d->serverCookie.size()));
     return true;
@@ -213,12 +216,14 @@ void AuthHiddenServiceChannel::sendAuthMessage()
 
     // get the public key
     //todo auth check here to see if the key is a v3 service id, to get the v3 public key
-    QByteArray publicKey = d->privateKey.encodedPublicKey(CryptoKey::DER);
+    const auto publicKey = d->v3serviceID.getV3ServiceId();
     if (publicKey.size() > 150) {
         BUG() << "Unexpected size for encoded public key";
         closeChannel();
         return;
     }
+    QByteArray pk(publicKey.c_str(), publicKey.size());
+    qCDebug(hs_auth) << "public key=" << pk;
 
     // make signature from proof data's HMAC (keyed-hash message authentication code)
     //  proof data: clientHostname + serverHostname, stored in a byte array
@@ -230,15 +235,17 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     QByteArray signature;
     //FIXME: d->privateKey is a CryptoKey instance with v3serviceID=""
     //todo auth check here to see if the key is a v3 service id, to get the v3 public key
-    QByteArray proofData = d->getProofData(d->privateKey.torServiceID());
-    if (!proofData.isEmpty()) {
-        // make a HMAC of the proof data
-        // HMAC: https://en.m.wikipedia.org/wiki/HMAC
-        // static QByteArray QMessageAuthenticationCode::hash(&message, &key, method)
-        QByteArray proofHMAC = QMessageAuthenticationCode::hash(proofData, d->clientCookie + d->serverCookie,
-                QCryptographicHash::Sha256);
-        signature = d->privateKey.signSHA256(proofHMAC);
-    }
+
+    // hash sha2-256 the pubkey 2 cookies and sign the hash
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+    hash.addData(pk);
+    hash.addData(d->serverCookie);
+    hash.addData(d->clientCookie);
+    const auto digest = hash.result();
+    qCDebug(hs_auth) << "digest=" << digest;
+    signature = d->privateKey.signSHA256(digest);
+     
+    
 
     if (signature.isEmpty()) {
         BUG() << "Creating proof on AuthHiddenServiceChannel failed";
@@ -250,14 +257,14 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     // Proof is a subclass of google::protobuf::Message
     // Proof is used as a storage to contain public key and signature for verification
     QScopedPointer<Data::AuthHiddenService::Proof> proof(new Data::AuthHiddenService::Proof);
-    proof->set_public_key(std::string(publicKey.constData(), publicKey.size()));
+    proof->set_public_key(publicKey);
     proof->set_signature(std::string(signature.constData(), signature.size()));
 
     Data::AuthHiddenService::Packet message;
     message.set_allocated_proof(proof.take());
     sendMessage(message);
 
-    qDebug() << "AuthHiddenServiceChannel sent outbound authentication packet";
+   qCDebug(hs_auth) << "AuthHiddenServiceChannel sent outbound authentication packet";
 }
 
 /**
@@ -302,7 +309,7 @@ void AuthHiddenServiceChannel::receivePacket(const QByteArray &packet)
     } else if (message.has_result()) {
         handleResult(message.result());
     } else {
-        qWarning() << "Unrecognized message on" << type();
+        qCWarning(hs_auth) << "Unrecognized message on" << type();
         closeChannel();
     }
 }
@@ -318,7 +325,7 @@ void AuthHiddenServiceChannel::handleProof(const Data::AuthHiddenService::Proof 
     Q_D(AuthHiddenServiceChannel);
 
     if (direction() != Inbound) {
-        qWarning() << "Received unexpected proof on outbound" << type();
+        qCWarning(hs_auth) << "Received unexpected proof on outbound" << type();
         closeChannel();
         return;
     }
@@ -349,34 +356,31 @@ void AuthHiddenServiceChannel::handleProof(const Data::AuthHiddenService::Proof 
     }
     else {
         // Invalid
-        qWarning() << "Received invalid signature (size" << signature.size() << ") on" << type();
+        qCWarning(hs_auth) << "Received invalid signature (size" << signature.size() << ") on" << type();
     }
     if (decoded) {
-        // FIXME: parameter is a empty string
-        QByteArray proofData = d->getProofData(publicKey.torServiceID());
-        if (!proofData.isEmpty()) {
+        
             // form a message for signature
-            QByteArray proofHMAC = QMessageAuthenticationCode::hash(proofData, d->clientCookie + d->serverCookie,
-                                                                    QCryptographicHash::Sha256);
-            // v2: RSA 1024 public key signature verification
+            QCryptographicHash hash(QCryptographicHash::Sha256);
+            hash.addData(publicKeyData);
+            hash.addData(d->serverCookie);
+            hash.addData(d->clientCookie);
+            const auto digest = hash.result();
+            qCDebug(hs_auth) << " pubkey=" <<  publicKeyData << " Sig=" << signature << " loaded=" << publicKey.isLoaded();
             // v3: ED25519 public key signature verification
-            verified = publicKey.verifySHA256(proofHMAC, signature);
-        }
-        else {
-            qWarning() << "Proof data is empty" << type();
-        }
+            verified = publicKey.verifySHA256(digest, signature);
     }
     else {
         // failed to decode public key
-        qWarning() << "Unable to parse public key from" << type();
+        qCWarning(hs_auth) << "Unable to parse public key from" << type();
     }
 
     if (!verified) {
-        qWarning() << "Signature verification failed on" << type();
+        qCWarning(hs_auth) << "Signature verification failed on" << type();
         result->set_accepted(false);
     } else {
         result->set_accepted(true);
-        qDebug() << type() << "accepted inbound authentication for" << publicKey.torServiceID();
+        qCDebug(hs_auth) << type() << "accepted inbound authentication for" << publicKey.torServiceID();
     }
 
     if (result->accepted()) {
@@ -410,18 +414,18 @@ void AuthHiddenServiceChannel::handleResult(const Data::AuthHiddenService::Resul
     Q_D(AuthHiddenServiceChannel);
 
     if (direction() != Outbound) {
-        qWarning() << "Received invalid message on AuthHiddenServiceChannel";
+        qCWarning(hs_auth) << "Received invalid message on AuthHiddenServiceChannel";
         closeChannel();
         return;
     }
 
     if (message.accepted()) {
-        qDebug() << "AuthHiddenServiceChannel succeeded as" << (message.is_known_contact() ? "known" : "unknown") << "contact";
+        qCDebug(hs_auth) << "AuthHiddenServiceChannel succeeded as" << (message.is_known_contact() ? "known" : "unknown") << "contact";
         d->accepted = true;
         if (message.is_known_contact())
             connection()->grantAuthentication(Connection::KnownToPeer);
     } else {
-        qWarning() << "AuthHiddenServiceChannel rejected";
+        qCWarning(hs_auth) << "AuthHiddenServiceChannel rejected";
         d->accepted = false;
     }
 
