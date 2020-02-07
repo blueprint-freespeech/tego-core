@@ -53,9 +53,13 @@ QByteArray AddOnionCommand::build()
     QByteArray out("ADD_ONION");
 
     if (m_service->privateKey().isLoaded()) {
-//        out += " RSA1024:";
-        out += " ED25519-V3:";
-        out += m_service->privateKey().encodedPrivateKey(CryptoKey::DER).toBase64();
+        if (m_service->privateKey().getVersion() == CryptoKey::V3) {
+            out += " ED25519-V3:";
+            out += QByteArray::fromStdString(m_service->privateKey().getV3privateKey());
+        } else if (m_service->privateKey().getVersion() == CryptoKey::V2) {
+            out += " RSA1024:";
+            out += m_service->privateKey().encodedPrivateKey(CryptoKey::DER).toBase64();
+        }
     } else {
 //        out += " NEW:RSA1024";
         out += " NEW:ED25519-V3";
@@ -90,16 +94,15 @@ void AddOnionCommand::onReply(int statusCode, const QByteArray &data)
     if (data.startsWith(keyPrefix)) {
         QByteArray keyData(QByteArray::fromBase64(data.mid(keyPrefix.size())));
         CryptoKey key;
-        if (!key.loadFromData(keyData, CryptoKey::PrivateKey, CryptoKey::DER)) {
+        if (!key.loadFromData(keyData, CryptoKey::V2PrivateKey, CryptoKey::DER)) {
             m_errorMessage = QStringLiteral("Key decoding failed");
             return;
         }
         m_service->setPrivateKey(key);
     }
     // returned data is v3 private key
-    //FIXME: v3 key should be a global instance
     else if (data.startsWith(keyPrefixV3)) {
-        CryptoKey key(CryptoKey::V3);
+        CryptoKey key(CryptoKey::V3PrivateKey);
         std::string keyData = data.toStdString()
                 .substr(keyPrefixV3.size());
         if(!key.loadFromDataV3(keyData, CryptoKey::V3PrivateKey)) {
@@ -111,7 +114,7 @@ void AddOnionCommand::onReply(int statusCode, const QByteArray &data)
     // returned data is v3 serviced ID
     else if ((data.size() == CryptoKey::V3ServiceIDLength + serviceIDPrefix.size())
             && data.startsWith((serviceIDPrefix))) {
-        CryptoKey key(CryptoKey::V3);
+        CryptoKey key(CryptoKey::V3ServiceID);
         std::string keyData = data.toStdString()
                 .substr(serviceIDPrefix.size());
         if (!key.loadFromDataV3(keyData, CryptoKey::V3ServiceID)) {

@@ -72,36 +72,62 @@ CryptoKey::Data::~Data()
 /**
  * clear all values in the key
  */
-void CryptoKey::clear()
-{
-    d = 0;
-    v3privateKey = "";
-    v3serviceID = "";
+void CryptoKey::clear() {
+    d = nullptr;
+    this->keyType = Empty;
+    this->v3EncodedKeyString = "";
 }
 
 /**
- * load key from a by bytearray (in PEM or DER), then save it in a RSA structure, stored in 'd', which
+ * load key from data, used for v2
+ * @param data - key data
+ * @param type - key type
+ * @param format - key format
+ * @return success of not
+ */
+bool CryptoKey::loadFromData(const QByteArray &data, KeyType type, KeyFormat format) {
+    if (this->getVersion() == V2) {
+        return this->loadFromDataV2(data, type, format);
+    } else {
+        return false;
+    }
+}
+
+/**
+ * load key from data, used for v3
+ * @param data - key data
+ * @param type - key type
+ * @return success of not
+ */
+bool CryptoKey::loadFromData(const std::string &data, KeyType type) {
+    if (this->getVersion() == V3) {
+        return this - loadFromDataV3(data, type);
+    } else {
+        return false;
+    }
+}
+
+/**
+ * load a v2 key from a by bytearray (in PEM or DER), then save it in a RSA structure, stored in 'd', which
  *  is a Shared Data containing the RSA key
- * will set version to v2.
- * @param data the bytearray key data
- * @param type PrivateKey or PublicKey
- * @param format PER or DER
+ * @param data - the bytearray key data
+ * @param type - V2PrivateKey or V2PublicKey
+ * @param format - PER or DER
  * @return success or not
  */
-bool CryptoKey::loadFromData(const QByteArray &data, KeyType type, KeyFormat format)
-{
+bool CryptoKey::loadFromDataV2(const QByteArray &data, KeyType type, KeyFormat format) {
     RSA *key = NULL;
     clear();
-
-    this->version = V2;
 
     if (data.isEmpty())
         return false;
 
-    if (format == PEM) {
-        BIO *b = BIO_new_mem_buf((void*)data.constData(), -1);
+    this->keyType = type;
 
-        if (type == PrivateKey)
+    if (format == PEM) {
+        BIO *b = BIO_new_mem_buf((void *) data.constData(), -1);
+
+        if (type == V2PrivateKey)
             key = PEM_read_bio_RSAPrivateKey(b, NULL, NULL, NULL);
         else
             key = PEM_read_bio_RSAPublicKey(b, NULL, NULL, NULL);
@@ -110,7 +136,7 @@ bool CryptoKey::loadFromData(const QByteArray &data, KeyType type, KeyFormat for
     } else if (format == DER) {
         const uchar *dp = reinterpret_cast<const uchar*>(data.constData());
 
-        if (type == PrivateKey)
+        if (type == V2PrivateKey)
             key = d2i_RSAPrivateKey(NULL, &dp, data.size());
         else
             key = d2i_RSAPublicKey(NULL, &dp, data.size());
@@ -119,7 +145,8 @@ bool CryptoKey::loadFromData(const QByteArray &data, KeyType type, KeyFormat for
     }
 
     if (!key) {
-        qWarning() << "Failed to parse" << (type == PrivateKey ? "private" : "public") << "key from data";
+        qWarning() << "Failed to parse" << (type == V2PrivateKey ? "private" : "public") << "key from data";
+        this->clear();
         return false;
     }
 
@@ -130,38 +157,34 @@ bool CryptoKey::loadFromData(const QByteArray &data, KeyType type, KeyFormat for
 /**
  * load a v3 key or serviceID from a by std::string.
  * will set version to v3.
- * @param type V3PrivateKey or V3ServiceID
- * @param data a string containing either the key or serviceID
+ * @param type - V3PrivateKey or V3ServiceID
+ * @param data - a string containing either the key or serviceID
  * @return success or not
  */
 bool CryptoKey::loadFromDataV3(const std::string &data, CryptoKey::KeyType type) {
-
     clear();
 
-    this->version = V3;
     if (data.empty())
         return false;
-
-    if (type == V3ServiceID) {
-        v3serviceID = data;
-        v3publicKey = getDecodedV3PublicKey().constData();
-        return true;
-    } else if (type == V3PrivateKey) {
-        this->v3privateKey = data;
-        v3privateKey = getDecodedV3PrivateKey().constData();
-        return true;
-    } else {
+    if (type == V3PrivateKey && data.length() != V3PrivateKeyLength) {
         return false;
     }
+    if (type == V3ServiceID && data.length() != V3ServiceIDLength) {
+        return false;
+    }
+
+    this->keyType = type;
+    this->v3EncodedKeyString = data;
+    return true;
 }
 
+// todo seems to be deprecated
 bool CryptoKey::loadFromFile(const QString &path, KeyType type, KeyFormat format)
 {
-    if (version == V2) {
+    if (this->getVersion() == V2) {
         QFile file(path);
-        if (!file.open(QIODevice::ReadOnly))
-        {
-            qWarning() << "Failed to open" << (type == PrivateKey ? "private" : "public") << "key from"
+        if (!file.open(QIODevice::ReadOnly)) {
+            qWarning() << "Failed to open" << (type == V2PrivateKey ? "private" : "public") << "key from"
                        << path << "-" << file.errorString();
             return false;
         }
@@ -170,9 +193,8 @@ bool CryptoKey::loadFromFile(const QString &path, KeyType type, KeyFormat format
         file.close();
 
         return loadFromData(data, type, format);
-    }
-    else if (version == V3) {
-        //FIXME: this is incorrect, fix it later
+    } else {
+        //todo no V3 implementation for this, since it's not really used
         return true;
     }
 }
@@ -181,31 +203,32 @@ bool CryptoKey::loadFromFile(const QString &path, KeyType type, KeyFormat format
  * check if a key or service id is stored in this CryptoKey
  * @return stored or not
  */
-bool CryptoKey::isLoaded() const{
-    if (version == V2) {
-        return d.data() && d->key != 0;
-    } else if (version == V3) {
-        //TODO: for v3
-        //FIXME: logic for v3 need to be corrected
-        if (v3privateKey.empty()) {
-            //if(v3ServiceID.length() == CryptoKey::V3ServiceIDByteLength){
-            //    
-            //}
-            // v3 private key is empty. check service id
-            return (this->v3serviceID.length() == CryptoKey::V3ServiceIDLength) || 
-                    (this->v3serviceID.length() == CryptoKey::V3ServiceIDByteLength);
-        }
-        else {
-            // v3 private key is not empty. check v3 private key
-            return v3privateKey.length() == CryptoKey::V3PrivateKeyByteLength;
-        }
-    }
-    return false;
+bool CryptoKey::isLoaded() const {
+    return this->keyType != Empty;
+//    if (version == V2) {
+//        return d.data() && d->key != 0;
+//    } else if (version == V3) {
+//        //TODO: for v3
+//        //FIXME: logic for v3 need to be corrected
+//        if (v3privateKey.empty()) {
+//            //if(v3ServiceID.length() == CryptoKey::V3ServiceIDByteLength){
+//            //
+//            //}
+//            // v3 private key is empty. check service id
+//            return (v3serviceID.length() == CryptoKey::V3ServiceIDLength) ||
+//                    (v3serviceID.length() == CryptoKey::V3ServiceIDByteLength);
+//        }
+//        else {
+//            // v3 private key is not empty. check v3 private key
+//            return (v3privateKey.length() == CryptoKey::V3PrivateKeyLength) ||
+//                    (v3privateKey.length() == CryptoKey::V3PrivateKeyByteLength);
+//        }
+//    }
+//    return false;
 }
 
 /**
  * check if this CryptoKey is storing a private key
- * Different logic applies for v2 and v3 onion service
  * @return private key or not
  */
 bool CryptoKey::isPrivate() const
@@ -213,30 +236,20 @@ bool CryptoKey::isPrivate() const
     if (!isLoaded()) {
       return false;
     } else {
-        if (version == V2) {
-            const BIGNUM *p, *q;
-            RSA_get0_factors(d->key, &p, &q);
-            return (p != 0);
-        } else if (version == V3) {
-            //TODO: for v3
-            //FIXME: logic for v3 need to be corrected
-            return v3privateKey.length() == CryptoKey::V3PrivateKeyByteLength;
-        } else {
-            return false;
-        }
-    }
-}
-
-/**
- * check if a key is a v3 serviceID
- * @return serviceID or not
- */
-bool CryptoKey::isV3serviceID() const
-{
-    if (!isLoaded()) {
-        return false;
-    } else {
-        return v3serviceID.size() == CryptoKey::V3ServiceIDLength;
+        return this->keyType == V2PrivateKey || this->keyType == V3PrivateKey;
+//        if (version == V2) {
+//            const BIGNUM *p, *q;
+//            RSA_get0_factors(d->key, &p, &q);
+//            return (p != 0);
+//        } else if (version == V3) {
+//            //TODO: for v3
+//            //FIXME: logic for v3 need to be corrected
+//            return this.type
+//            return (v3privateKey.length() == CryptoKey::V3PrivateKeyLength) ||
+//                   (v3privateKey.length() == CryptoKey::V3PrivateKeyByteLength);
+//        } else {
+//            return false;
+//        }
     }
 }
 
@@ -245,11 +258,11 @@ bool CryptoKey::isV3serviceID() const
  * the public key is just the first 52 chars of the service ID (remove last 4 chars)
  * @return a v3 public key
  */
-std::string CryptoKey::getV3PublicKey() const {
-    if (!isLoaded() || !isV3serviceID()) {
+std::string CryptoKey::getEncodedV3PublicKey() const {
+    if (this->keyType != V3ServiceID) {
         return "";
     } else {
-        return v3serviceID.substr(0, CryptoKey::V3PublicKeyLength);
+        return this->v3EncodedKeyString.substr(0, CryptoKey::V3PublicKeyLength);
     }
 }
 
@@ -259,17 +272,16 @@ std::string CryptoKey::getV3PublicKey() const {
  * @return public key in bytes
  */
 QByteArray CryptoKey::getDecodedV3PublicKey() const{
-    if (!isLoaded() || !isV3serviceID()) {
+    if (this->keyType != V3ServiceID) {
         return QByteArray();
-    }
-    else {
-        std::string v3publicKey = getV3PublicKey();
+    } else {
+        std::string v3publicKey = getEncodedV3PublicKey();
         // to upper case
         for (auto &c: v3publicKey) c = toupper(c);
         // padding last 4 positions (size of 56)
         v3publicKey.append("====");
         // dest variable, add 4 bytes for base32 algorithm
-        QByteArray re(CryptoKey::V3PublicKeyByteLength+4, 0);
+        QByteArray re(CryptoKey::V3PublicKeyByteLength + 4, 0);
         // base32 decoding
         base32_decode(re.data(), re.size(), v3publicKey.c_str(), v3publicKey.size());
         // remove 3 bytes(1 checksum + 2 v3-related) and 1 null
@@ -288,11 +300,11 @@ QByteArray CryptoKey::getDecodedV3PublicKey() const{
  * the encoding/decoding is done with base64
  * @return private key in bytes
  */
-QByteArray CryptoKey::getDecodedV3PrivateKey() const{
-//    if (!isLoaded() || version != V3 || !isPrivate()) {
-//        return QByteArray();
-//    } else {
-        QByteArray stringBytes = QByteArray::fromStdString(this->v3privateKey);
+QByteArray CryptoKey::getDecodedV3PrivateKey() const {
+    if (this->keyType != V3PrivateKey) {
+        return QByteArray();
+    } else {
+        QByteArray stringBytes = QByteArray::fromStdString(this->v3EncodedKeyString);
         QByteArray bytes(QByteArray::fromBase64(stringBytes));
         // bytes.toHex().constData() will show the char* of the hex representation of decoded key
         if (bytes.size() == CryptoKey::V3PrivateKeyByteLength) {
@@ -300,14 +312,14 @@ QByteArray CryptoKey::getDecodedV3PrivateKey() const{
         } else {
             return QByteArray();
         }
-//    }
+    }
 }
 
-QByteArray CryptoKey::getDecodedHexV3PrivateKey() const{
-//    if (!isLoaded() || version != V3 || !isPrivate()) {
-//        return QByteArray();
-//    } else {
-        QByteArray stringBytes = QByteArray::fromStdString(this->v3privateKey);
+QByteArray CryptoKey::getDecodedHexV3PrivateKey() const {
+    if (this->keyType != V3PrivateKey) {
+        return QByteArray();
+    } else {
+        QByteArray stringBytes = QByteArray::fromStdString(this->v3EncodedKeyString);
         QByteArray bytes(QByteArray::fromHex(stringBytes.toHex()));
         // bytes.toHex().constData() will show the char* of the hex representation of decoded key
         if (bytes.size() == CryptoKey::V3PrivateKeyByteLength) {
@@ -315,31 +327,30 @@ QByteArray CryptoKey::getDecodedHexV3PrivateKey() const{
         } else {
             return QByteArray();
         }
-//  
+    }
 }
+
 /**
  * return the number of bits of s v2 key
  * @return number of bits
  */
-int CryptoKey::bits() const
-{
+int CryptoKey::bits() const {
     return isLoaded() ? RSA_bits(d->key) : 0;
 }
 
 /**
- * hash a public key into a digest, used only for v2
+ * hash a v2 public key into a digest
  * @return the digest
  */
-QByteArray CryptoKey::publicKeyDigest() const
-{
+QByteArray CryptoKey::v2PublicKeyDigest() const {
     if (!isLoaded())
         return QByteArray();
 
     QByteArray buf = encodedPublicKey(DER);
 
     QByteArray re(20, 0);
-    bool ok = SHA1(reinterpret_cast<const unsigned char*>(buf.constData()), buf.size(),
-         reinterpret_cast<unsigned char*>(re.data())) != NULL;
+    bool ok = SHA1(reinterpret_cast<const unsigned char *>(buf.constData()), buf.size(),
+                   reinterpret_cast<unsigned char *>(re.data())) != NULL;
 
     if (!ok)
     {
@@ -353,7 +364,7 @@ QByteArray CryptoKey::publicKeyDigest() const
 /**
  * encode a public key
  * for v2: PEM or DER public key (RSA) using openssl RSA lib
- * for v3: simply build a byte array from the stored public key as it is already encoded (base32)
+ * for v3: simply build a byte array from the public key as it is already encoded (base32)
  * @param format PEM or DER
  * @return encoded key byte array
  */
@@ -362,10 +373,10 @@ QByteArray CryptoKey::encodedPublicKey(KeyFormat format) const
     if (!isLoaded())
         return QByteArray();
 
-    if (version == V3) {
+    if (this->getVersion() == V3) {
         // for v3, simply build a byte array from the stored public key as it is already encoded.
-        return QByteArray::fromStdString(this->getV3PublicKey());
-    } else if (version == V2) {
+        return QByteArray::fromStdString(this->getEncodedV3PublicKey());
+    } else if (this->getVersion() == V2) {
         if (format == PEM) {
             BIO *b = BIO_new(BIO_s_mem());
 
@@ -411,14 +422,13 @@ QByteArray CryptoKey::encodedPublicKey(KeyFormat format) const
  * @param format PEM or DER
  * @return encoded key byte array
  */
-QByteArray CryptoKey::encodedPrivateKey(KeyFormat format) const
-{
+QByteArray CryptoKey::encodedPrivateKey(KeyFormat format) const {
     if (!isLoaded() || !isPrivate())
         return QByteArray();
 
-    if (version == V3) {
-        return QByteArray::fromStdString(this->v3privateKey);
-    } else if (version == V2) {
+    if (this->getVersion() == V3) {
+        return QByteArray::fromStdString(this->v3EncodedKeyString);
+    } else if (this->getVersion() == V2) {
         if (format == PEM) {
             BIO *b = BIO_new(BIO_s_mem());
 
@@ -464,16 +474,20 @@ QByteArray CryptoKey::encodedPrivateKey(KeyFormat format) const
  * v3: the service id is stored so just return it
  * @return serviceID
  */
-QString CryptoKey::torServiceID() const
-{
+QString CryptoKey::torServiceID() const {
     // for v3, the service id is stored explicitly
-    if (version == V3) {
-        return QLatin1String(v3serviceID.c_str());
-    } else if (version == V2) {
-        if (!isLoaded()){
-            return QString();}
+    if (this->getVersion() == V3) {
+        if (this->keyType == V3ServiceID) {
+            return QLatin1String(this->v3EncodedKeyString.c_str());
+        } else {
+            return QString();
+        }
+    } else if (this->getVersion() == V2) {
+        if (!isLoaded()) {
+            return QString();
+        }
 
-        QByteArray digest = publicKeyDigest();
+        QByteArray digest = v2PublicKeyDigest();
         if (digest.isNull())
             return QString();
 
@@ -492,53 +506,54 @@ QString CryptoKey::torServiceID() const
     }
 }
 
-
-
 /**
- * sign the message(proofHMAC)
- * for v2: using RSA_sign
- * for v3: using donna_sign
+ * sign the message(proofHMAC) for v2
  * @param digest
  * @return the signature
  */
-QByteArray CryptoKey::signSHA256(const QByteArray &digest) const
-{
-    if (!isPrivate())
+QByteArray CryptoKey::signSHA256(const QByteArray &digest) const {
+    if (this->keyType != V2PrivateKey) {
         return QByteArray();
+    }
+
     int result = 0; // result on generating signature, 1: successful, 0: failed
-    if (version == V2) {
-        QByteArray re(RSA_size(d->key), 0);
-        unsigned sigsize = 0;
-        result = RSA_sign(NID_sha256, reinterpret_cast<const unsigned char *>(digest.constData()), digest.size(),
-                         reinterpret_cast<unsigned char *>(re.data()), &sigsize, d->key);
-        if (result != 1) {
-            qWarning() << "RSA encryption failed when generating signature";
-            return QByteArray();
-        }
-        else {
-            re.truncate(sigsize);
-            return re;
-        }
-    }
-    else if (version == V3) {
-        // call signing function for v3 keys
-        QByteArray re(V3SignatureByteLength, 0);
-        result = ed25519_donna_sign(
-                reinterpret_cast<unsigned char *>(re.data()),
-                reinterpret_cast<const unsigned char *>(digest.constData()),
-                digest.size(), reinterpret_cast<const unsigned char *>(v3privateKey.c_str()),
-                reinterpret_cast<const unsigned char *>(v3publicKey.c_str()));
-        if (result != 1) {
-            qWarning() << "ed25519 encryption failed when generating signature";
-            return QByteArray();
-        }
-        else {
-            return re;
-        }
-    }
-    else {
-        qWarning() << "Failed generating signature: no version";
+    QByteArray re(RSA_size(d->key), 0);
+    unsigned sigsize = 0;
+    result = RSA_sign(NID_sha256, reinterpret_cast<const unsigned char *>(digest.constData()), digest.size(),
+                      reinterpret_cast<unsigned char *>(re.data()), &sigsize, d->key);
+    if (result != 1) {
+        qWarning() << "RSA encryption failed when generating signature";
         return QByteArray();
+    } else {
+        re.truncate(sigsize);
+        return re;
+    }
+}
+
+/**
+ * sign the message(proofHMAC) for v3
+ * @param digest
+ * @return the signature
+ */
+QByteArray CryptoKey::signSHA256(const QByteArray &digest, const CryptoKey &v3serviceID) const {
+    if (this->keyType != V3PrivateKey || v3serviceID.keyType != V3ServiceID) {
+        return QByteArray();
+    }
+
+    int result = 0; // result on generating signature, 1: successful, 0: failed
+    // call signing function for v3 keys
+    QByteArray re(V3SignatureByteLength, 0);
+    //todo auth test if this works: try getEncodedV3PublicKey or decoded
+    result = ed25519_donna_sign(
+            reinterpret_cast<unsigned char *>(re.data()),
+            reinterpret_cast<const unsigned char *>(digest.constData()),
+            digest.size(), reinterpret_cast<const unsigned char *>(this->v3EncodedKeyString.c_str()),
+            reinterpret_cast<const unsigned char *>(v3serviceID.getEncodedV3PublicKey().c_str()));
+    if (result != 1) {
+        qWarning() << "ed25519 encryption failed when generating signature";
+        return QByteArray();
+    } else {
+        return re;
     }
 }
 
@@ -551,20 +566,17 @@ QByteArray CryptoKey::signSHA256(const QByteArray &digest) const
  */
 bool CryptoKey::verifySHA256(const QByteArray &digest, QByteArray signature) const
 {
-    if (!isLoaded())
-        return false;
     int result = 0; // result on verifying signature, 1: successful, 0: failed
-    if (version == V2) {
-        result = RSA_verify(NID_sha256, reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
-                           reinterpret_cast<uchar*>(signature.data()), signature.size(), d->key);
-    }
-    else if (version == V3) {
+    if (this->keyType == V2PublicKey) {
+        result = RSA_verify(NID_sha256, reinterpret_cast<const uchar *>(digest.constData()), digest.size(),
+                            reinterpret_cast<uchar *>(signature.data()), signature.size(), d->key);
+    } else if (this->keyType == V3ServiceID) {
         //call verifying function for v3 keys
-        result = ed25519_sign_open(reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
-                                   reinterpret_cast<const uchar*>(v3publicKey.c_str()),
-                                   reinterpret_cast<const uchar*>(signature.constData()));
-    }
-    else {
+        //todo auth check if this works: try getEncodedV3PublicKey and decoded
+        result = ed25519_sign_open(reinterpret_cast<const uchar *>(digest.constData()), digest.size(),
+                                   reinterpret_cast<const uchar *>(this->getEncodedV3PublicKey().c_str()),
+                                   reinterpret_cast<const uchar *>(signature.constData()));
+    } else {
         return false;
     }
     return result == 1;
@@ -600,19 +612,19 @@ QByteArray torControlHashedPassword(const QByteArray &password)
 
 /**
  * verify the data('s digest) against the signature, with own key
- * used by test
+ * used only by test
  * @param data
  * @param signature
  * @return valid or not
  */
 bool CryptoKey::verifyData(const QByteArray &data, QByteArray signature) const
 {
-    if (version == V3) {
+    if (this->keyType == V3ServiceID) {
         // todo
-    } else if (version == V2) {
+    } else if (this->keyType == V2PublicKey) {
         QByteArray digest(32, 0);
-        bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
-                         reinterpret_cast<unsigned char*>(digest.data())) != NULL;
+        bool ok = SHA256(reinterpret_cast<const unsigned char *>(data.constData()), data.size(),
+                         reinterpret_cast<unsigned char *>(digest.data())) != NULL;
 
         if (!ok) {
             qWarning() << "Digest for RSA verify failed";
@@ -626,22 +638,22 @@ bool CryptoKey::verifyData(const QByteArray &data, QByteArray signature) const
 
 /**
  * sign the data's digest (a checksum of data by SHA256) with own private key
- * used by test
+ * used only by test
  * @param data
  * @return signature
  */
 QByteArray CryptoKey::signData(const QByteArray &data) const
 {
-    if (version == V3) {
+    if (this->getVersion() == V3) {
         std::string signature;
         // todo: sign v3 ed25519 key
         // param1: signature, param2: message(proof data), param3: message length, param4: private key, param5: public key
 
 
-    } else if (version == V2) {
+    } else if (this->getVersion() == V2) {
         QByteArray digest(32, 0);
-        bool ok = SHA256(reinterpret_cast<const unsigned char*>(data.constData()), data.size(),
-                         reinterpret_cast<unsigned char*>(digest.data())) != NULL;
+        bool ok = SHA256(reinterpret_cast<const unsigned char *>(data.constData()), data.size(),
+                         reinterpret_cast<unsigned char *>(digest.data())) != NULL;
         if (!ok) {
             qWarning() << "Digest for RSA signature failed";
             return QByteArray();
@@ -650,6 +662,20 @@ QByteArray CryptoKey::signData(const QByteArray &data) const
         return signSHA256(digest);
     }
     return QByteArray();
+}
+
+/**
+ * get the version of the current key
+ * @return V2, V3 or INVALID
+ */
+CryptoKey::Version CryptoKey::getVersion() const {
+    if (this->keyType == V2PrivateKey || this->keyType == V2PublicKey) {
+        return V2;
+    } else if (this->keyType == V3PrivateKey || this->keyType == V3ServiceID) {
+        return V3;
+    } else {
+        return INVALID;
+    }
 }
 
 /* Copyright (c) 2001-2004, Roger Dingledine

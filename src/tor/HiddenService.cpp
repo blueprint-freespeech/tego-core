@@ -47,8 +47,9 @@ HiddenService::HiddenService(QObject *parent)
 {
 }
 
+// todo seems to be deprecated
 HiddenService::HiddenService(const QString &path, QObject *parent)
-    : QObject(parent), m_dataPath(path), m_status(NotCreated)
+        : QObject(parent), m_dataPath(path), m_status(NotCreated)
 {
     /* Set the initial status and, if possible, load the hostname */
     if (QDir(m_dataPath).exists(QLatin1String("private_key"))) {
@@ -115,7 +116,7 @@ void HiddenService::setPrivateKey(const CryptoKey &key)
 
 void HiddenService::setV3serviceID(const CryptoKey &serviceID)
 {
-    if (!serviceID.isV3serviceID()) {
+    if (serviceID.getKeyType() != CryptoKey::V3ServiceID) {
         BUG() << "Cannot set up hidden service with non-v3 service ID";
         return;
     }
@@ -125,12 +126,13 @@ void HiddenService::setV3serviceID(const CryptoKey &serviceID)
     emit privateKeyChanged();
 }
 
+// todo seems to be deprecated
 void HiddenService::loadPrivateKey()
 {
     if (m_privateKey.isLoaded() || m_dataPath.isEmpty())
         return;
 
-    bool ok = m_privateKey.loadFromFile(m_dataPath + QLatin1String("/private_key"), CryptoKey::PrivateKey);
+    bool ok = m_privateKey.loadFromFile(m_dataPath + QLatin1String("/private_key"), CryptoKey::V2PrivateKey);
     if (!ok) {
         qWarning() << "Failed to load hidden service key";
         return;
