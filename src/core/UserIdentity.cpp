@@ -84,12 +84,10 @@ void UserIdentity::setupService()
     QString legacyDir = m_settings->read("dataDirectory").toString();
 
     if (!keyData.isEmpty()) {
-        // TODO: add v3 support: by checking keyData length we know it's v3 or v2
-        // FIXME: need to add loadfromfile() inside loadfromdatav3() or not ?
         if (keyData.size() == CryptoKey::V3PrivateKeyLength) {
             // for V3 key and serviceID
-            CryptoKey v3privateKey;
-            CryptoKey v3serviceId;
+            CryptoKey v3privateKey(CryptoKey::V3PrivateKey);
+            CryptoKey v3serviceId(CryptoKey::V3ServiceID);
             bool privateKeyLoaded = v3privateKey.loadFromDataV3(
                     keyData.toLatin1().toStdString(), CryptoKey::V3PrivateKey);
             bool serviceIdLoaded = v3serviceId.loadFromDataV3(
@@ -101,8 +99,9 @@ void UserIdentity::setupService()
             m_hiddenService = new Tor::HiddenService(v3privateKey, v3serviceId, legacyDir, this);
         } else {
             // for V2 keys
-            CryptoKey key;
-            if (!key.loadFromData(QByteArray::fromBase64(keyData.toLatin1()), CryptoKey::PrivateKey, CryptoKey::DER)) {
+            CryptoKey key(CryptoKey::V2PrivateKey);
+            if (!key.loadFromData(QByteArray::fromBase64(keyData.toLatin1()), CryptoKey::V2PrivateKey,
+                                  CryptoKey::DER)) {
                 qWarning() << "Cannot load v2 service key from configuration";
                 return;
             }
@@ -111,13 +110,18 @@ void UserIdentity::setupService()
     } else if (!legacyDir.isEmpty() && QFile::exists(
             legacyDir + QLatin1String("/private_key"))) {
         qDebug() << "Attempting to load key from legacy filesystem format in" << legacyDir;
-
+        // todo seems to be deprecated
         CryptoKey key;
-        if (!key.loadFromFile(legacyDir + QLatin1String("/private_key"), CryptoKey::PrivateKey)) {
+        if (!key.loadFromFile(legacyDir + QLatin1String("/private_key"), CryptoKey::V2PrivateKey)) {
             qWarning() << "Cannot load legacy format key from" << legacyDir << "for conversion";
             return;
         } else {
-            keyData = QString::fromLatin1(key.encodedPrivateKey(CryptoKey::DER).toBase64());
+            if (key.getVersion() == CryptoKey::V2) {
+                keyData = QString::fromLatin1(key.encodedPrivateKey(CryptoKey::DER).toBase64());
+            } else if (key.getVersion() == CryptoKey::V3) {
+                keyData = QString::fromStdString(key.getV3privateKey());
+            }
+
             m_settings->write("serviceKey", keyData);
             m_hiddenService = new Tor::HiddenService(key, legacyDir, this);
         }
@@ -131,16 +135,18 @@ void UserIdentity::setupService()
             [&]() {
                 if (m_hiddenService->V3serviceId().isLoaded()) {
                     m_settings->write("V3serviceId", QString::fromStdString(
-                            m_hiddenService->V3serviceId().getV3ServiceId()));
+                            m_hiddenService->V3serviceId().getV3serviceID()));
                 }
                 if (m_hiddenService->privateKey().isLoaded()) {
-                    if (m_hiddenService->privateKey().getVersion() == CryptoKey::Version::V2) {
-                        QString key = QString::fromLatin1(m_hiddenService->
+                    if (m_hiddenService->privateKey().getVersion() == CryptoKey::V2) {
+                        QString key;
+                        key = QString::fromLatin1(m_hiddenService->
                                 privateKey().encodedPrivateKey(CryptoKey::DER).toBase64());
                         m_settings->write("serviceKey", key);
                     } else if (m_hiddenService->privateKey().getVersion() == CryptoKey::Version::V3) {
-                        m_settings->write("serviceKey", QString::fromLatin1(m_hiddenService->
-                        privateKey().encodedPrivateKey(CryptoKey::V3ENCODED).toBase64()));
+                        QString key;
+                        key = QString::fromStdString(m_hiddenService->privateKey().getV3privateKey());
+                        m_settings->write("serviceKey", key);
                     }
                 }
             }

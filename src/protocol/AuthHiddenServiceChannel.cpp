@@ -82,6 +82,7 @@ AuthHiddenServiceChannel::AuthHiddenServiceChannel(Direction dir, Connection *co
     );
 }
 
+//todo change function name after v3 upgrade
 void AuthHiddenServiceChannel::setPrivateKey(const CryptoKey &key, const CryptoKey &v3serviceID)
 {
     Q_D(AuthHiddenServiceChannel);
@@ -155,7 +156,7 @@ bool AuthHiddenServiceChannel::allowOutboundChannelRequest(Data::Control::OpenCh
     // IT IS BAD
     // DO NOT USE THIS IN PRODUCTION
     // PLEASE
-    d->privateKey.v3privateKey = d->privateKey.v3serviceID;
+//    d->privateKey.v3privateKey = d->privateKey.v3serviceID;
     if (!d->privateKey.isLoaded()) {
         BUG() << "AuthHiddenServiceChannel can't be opened without a private key";
         return false;
@@ -341,11 +342,11 @@ void AuthHiddenServiceChannel::handleProof(const Data::AuthHiddenService::Proof 
     bool decoded = false;  // public key decoding status
     if (signature.size() == 128) {
         // v2
-        decoded= publicKey.loadFromData(publicKeyData, CryptoKey::PublicKey, CryptoKey::DER);
+        decoded = publicKey.loadFromData(publicKeyData, CryptoKey::V2PublicKey, CryptoKey::DER);
     }
     else if (signature.size() == 64) {
         // v3
-        decoded = publicKey.loadFromDataV3(publicKeyData.constData(), CryptoKey::PublicKey);
+        decoded = publicKey.loadFromDataV3(publicKeyData.constData(), CryptoKey::V2PublicKey);
     }
     else {
         // Invalid
