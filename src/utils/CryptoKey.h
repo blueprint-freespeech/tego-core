@@ -55,10 +55,11 @@ public:
 
 
     enum KeyType {
-        PrivateKey,
-        PublicKey,
+        V2PrivateKey,
+        V2PublicKey,
         V3PrivateKey,
         V3ServiceID,
+        Empty,
     };
 
     // V3 keys can be encoded in either base32 (public key/service id) or base64 (private key hash)
@@ -76,64 +77,88 @@ public:
         INVALID,
     };
 
-    CryptoKey() {version = INVALID;};
+    CryptoKey() : CryptoKey(keyType = Empty) {}
 
-    explicit CryptoKey(const CryptoKey::Version version) : version(version) {
-        v3privateKey = "";
-        v3serviceID = "";
+    explicit CryptoKey(const KeyType keyType) :
+            keyType(keyType) {
+        this->v3EncodedKeyString = "";
     };
-    CryptoKey(const CryptoKey &other) : d(other.d), version(other.version),
-                                        v3privateKey(other.v3privateKey), v3serviceID(other.v3serviceID){ };
+
+    CryptoKey(const CryptoKey &other) = default;
+
     ~CryptoKey();
 
     bool loadFromData(const QByteArray &data, KeyType type, KeyFormat format = PEM);
+
+    bool loadFromData(const std::string &data, KeyType type);
+
+    bool loadFromDataV2(const QByteArray &data, KeyType type, KeyFormat format);
+
     bool loadFromDataV3(const std::string &data, KeyType type);
+
     bool loadFromFile(const QString &path, KeyType type, KeyFormat format = PEM);
+
     void clear();
 
     bool isLoaded() const;
-    bool isPrivate() const;
-    bool isV3serviceID() const;
 
-    std::string getV3PublicKey() const;
-    std::string getV3ServiceId() const { return this->v3serviceID; }
-    Version getVersion() const { return this->version; }
-    QByteArray getDecodedV3PublicKey() const;
-    QByteArray getDecodedV3PrivateKey() const;
+    bool isPrivate() const;
+
     QByteArray getDecodedHexV3PrivateKey() const;
-    QByteArray publicKeyDigest() const;
+
+    QByteArray v2PublicKeyDigest() const;
+
     QByteArray encodedPublicKey(KeyFormat format) const;
     QByteArray encodedPrivateKey(KeyFormat format) const;
     QString torServiceID() const;
+
     int bits() const;
 
     // Calculate and sign SHA-256 digest of data using this key and PKCS #1 v2.0 padding
     QByteArray signData(const QByteArray &data) const;
+
     // Verify a signature as per signData
     bool verifyData(const QByteArray &data, QByteArray signature) const;
 
+    // the sing function for v2
     // Sign the input SHA-256 digest using this key and PKCS #1 v2.0 padding
     QByteArray signSHA256(const QByteArray &digest) const;
+
+    // the sign function for v3
+    QByteArray signSHA256(const QByteArray &digest, const CryptoKey &v3serviceID) const;
+
     // Verify a signature as per signSHA256
     bool verifySHA256(const QByteArray &digest, QByteArray signature) const;
 
+
+    // getters
+    KeyType getKeyType() const { return this->keyType; }
+
+    Version getVersion() const;
+
+    std::string getV3privateKey() { return this->keyType == V3PrivateKey ? this->v3EncodedKeyString : ""; }
+
+    std::string getV3serviceID() { return this->keyType == V3ServiceID ? this->v3EncodedKeyString : ""; }
+
+    std::string getEncodedV3PublicKey() const;
+
+    QByteArray getDecodedV3PublicKey() const;
+
+    QByteArray getDecodedV3PrivateKey() const;
+
 private:
-    struct Data : public QSharedData
-    {
+    struct Data : public QSharedData {
         typedef struct rsa_st RSA;
         RSA *key;
 
-        Data(RSA *k = 0) : key(k) { }
+        Data(RSA *k = 0) : key(k) {}
+
         ~Data();
     };
 
     QExplicitlySharedDataPointer<Data> d;
-
-public:
-    Version version;
-    std::string v3privateKey;
-    std::string v3publicKey;
-    std::string v3serviceID;
+    KeyType keyType;
+    std::string v3EncodedKeyString;
 };
 
 QByteArray torControlHashedPassword(const QByteArray &password);
