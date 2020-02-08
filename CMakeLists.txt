@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (APPLE)
     set(MACOSX TRUE)
 endif()
 project(ricochet-refresh)
@@ -12,26 +12,27 @@ set(CMAKE_AUTOUIC ON)
 if(CMAKE_VERSION VERSION_LESS "3.7.0")
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
-if (MACOSX)
-    set(QT5_DIR /usr/local/opt/qt/include)
-    set(Protobuf_INCLUDE_DIRS /usr/local/opt/protobuf/include)
-    set(OPENSSL_INCLUDE_DIR /usr/local/opt/openssl/include)
+if (APPLE)
+    set(Qt5_DIR /usr/local/opt/qt5/lib/cmake/Qt5)
+    set(Protobuf_ROOT_DIR /usr/local/opt/protobuf)
+    #set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
+    set(Protobuf_INCLUDE_DIR ${Protobuf_ROOT_DIR}/include)
+    #set(OPENSSL_INCLUDE_DIR ${OPENSSL_ROOT_DIR}/include)
 endif()
 
 
-find_package(Qt5Widgets REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(Qt5Network REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 
 # qt5 modules
-set(MODULES Core Widgets Network Quick)
+set(MODULES Core Widgets Network Quick QuickCompiler)
+if(APPLE)
+set(MODULES ${MODULES} MacExtras)
+endif()
 foreach(mod IN ITEMS ${MODULES})
     find_package(Qt5 REQUIRED ${mod} REQUIRED)
 endforeach(mod IN ITEMS ${MODULES})
-
-find_package(Qt5QuickCompiler REQUIRED)
 
 
 
@@ -151,8 +152,12 @@ set(HEADERS src/protocol/Channel.h
         )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src ${Protobuf_INCLUDE_DIRS} ${QT5_DIR})
 add_executable(ricochet-refresh ${SOURCES} ${HEADERS} ${UI_RESOURCES})
-target_link_libraries(ricochet-refresh protobuf)
+target_link_libraries(ricochet-refresh ${PROTOBUF_LIBRARIES})
 target_link_libraries(ricochet-refresh Qt5::Widgets Qt5::Network OpenSSL::Crypto)
 target_link_libraries(ricochet-refresh Qt5::Widgets Qt5::Network Qt5::Quick Qt5::Core OpenSSL::Crypto)
+if(APPLE)
+    target_include_directories(ricochet-refresh PUBLIC Qt5:MacExtras)
+    target_link_libraries(ricochet-refresh Qt5::MacExtras)
+endif()
 
 qt5_use_modules(ricochet-refresh ${MODULES})

@@ -39,6 +39,11 @@
 #include <QDir>
 #include <QCoreApplication>
 
+
+#ifdef Q_OS_OSX
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 using namespace Tor;
 
 Q_LOGGING_CATEGORY(tor_manager, "ricochet.tor");
@@ -152,8 +157,13 @@ void TorManager::start()
     SettingsObject settings(QStringLiteral("tor"));
 
     // If a control port is defined by config or environment, skip launching tor
-    if (!settings.read("controlPort").isUndefined() ||
-        !qEnvironmentVariableIsEmpty("TOR_CONTROL_PORT"))
+    #ifdef Q_OS_MACOS
+    const bool noEmbedded = false;
+    #else
+    const bool noEmbedded = true;
+    #endif
+    if (noEmbedded && (!settings.read("controlPort").isUndefined() ||
+        !qEnvironmentVariableIsEmpty("TOR_CONTROL_PORT")))
     {
         QHostAddress address(settings.read("controlAddress").toString());
         quint16 port = (quint16)settings.read("controlPort").toInt();
@@ -185,6 +195,7 @@ void TorManager::start()
     } else {
         // Launch a bundled Tor instance
         QString executable = d->torExecutablePath();
+        qCWarning(tor_manager) << "launch " << executable;
         if (executable.isEmpty()) {
             d->setError(QStringLiteral("Cannot find tor executable"));
             return;
@@ -275,6 +286,16 @@ void TorManagerPrivate::getConfFinished()
 
 QString TorManagerPrivate::torExecutablePath() const
 {
+#ifdef Q_OS_OSX
+    CFURLRef appUrlRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
+    const char *pathPtr = CFStringGetCStringPtr(macPath,kCFStringEncodingUTF8);
+    std::string path(pathPtr);
+    CFRelease(appUrlRef);
+    CFRelease(macPath);
+    return QString::fromStdString(path) + QStringLiteral("/Contents/MacOS/tor/tor");
+#else
+
     SettingsObject settings(QStringLiteral("tor"));
     QString path = settings.read("executablePath").toString();
     if (!path.isEmpty())
@@ -298,6 +319,7 @@ QString TorManagerPrivate::torExecutablePath() const
 
     // Try $PATH
     return filename.mid(1);
+#endif
 }
 
 bool TorManagerPrivate::createDataDir(const QString &path)
@@ -311,7 +333,6 @@ bool TorManagerPrivate::createDefaultTorrc(const QString &path)
     static const char defaultTorrcContent[] =
         "SocksPort auto\n"
         "AvoidDiskWrites 1\n"
-        "DisableNetwork 1\n"
         "__ReloadTorrcOnSIGHUP 0\n";
 
     QFile file(path);
