@@ -246,14 +246,12 @@ void AuthHiddenServiceChannel::sendAuthMessage()
     qCDebug(hs_auth) << "digest=" << digest;
     signature = d->privateKey.signSHA256(digest);
      
-    
 
     if (signature.isEmpty()) {
         BUG() << "Creating proof on AuthHiddenServiceChannel failed";
         closeChannel();
         return;
     }
-
     // put signature & public key in a Proof class, to be sent as auth message
     // Proof is a subclass of google::protobuf::Message
     // Proof is used as a storage to contain public key and signature for verification
@@ -276,8 +274,6 @@ void AuthHiddenServiceChannel::sendAuthMessage()
 QByteArray AuthHiddenServiceChannelPrivate::getProofData(const QString &client)
 {
     // FIXME: Currently, clientHostname is empty string, client didn't get passed correctly from parameters.
-    if(!client.endsWith(QLatin1String(".onion")));
-        return QByteArray();
     QByteArray serverHostname = connection->serverHostname().replace(QLatin1String(".onion"), QLatin1String("")).toLatin1();
     QByteArray clientHostname = client.toLatin1();
 

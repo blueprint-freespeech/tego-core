@@ -166,7 +166,7 @@ void TorProcess::start()
         QFile::remove(d->controlPortFilePath());
     d->controlPort = 0;
     d->controlHost.clear();
-
+    qWarning() << "launch " << d->executable;
     d->process.setProcessChannelMode(QProcess::MergedChannels);
     d->process.start(d->executable, args, QIODevice::ReadOnly);
 }
