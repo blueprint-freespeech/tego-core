@@ -111,7 +111,9 @@ int main(int argc, char *argv[])
 
     /* Tor control manager */
     Tor::TorManager *torManager = Tor::TorManager::instance();
+
     torManager->setDataDirectory(QFileInfo(settings->filePath()).path() + QStringLiteral("/tor/"));
+ 
     torControl = torManager->control();
     torManager->start();
     qCDebug(ricochet_main) << "started tor manager";
