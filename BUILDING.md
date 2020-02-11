@@ -12,6 +12,23 @@ Add `CONFIG+=debug` or `CONFIG+=release` to the qmake command for a debug or rel
 
 By default, Ricochet Refresh will be portable, and configuration is stored in a folder named `config` next to the binary. Add `DEFINES+=RICOCHET_NO_PORTABLE` to the qmake command for a system-wide installation using platform configuration paths instead.
 
+## Static tor
+
+Building a static tor requires:
+
+* git
+* pkg-config
+* autoconf 
+* automake
+* gmake
+* a C compiler
+
+to build (any platform):
+
+    $ make -f GMakeFile.tor
+
+on bsd use `gmake` instead.
+
 ## Linux
 
 You will need:

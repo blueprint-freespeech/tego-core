@@ -1,0 +1,52 @@
+REPO := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+BUILD = $(REPO)/build
+PREFIX = $(BUILD)/prefix
+
+LIBEVENT_ROOT=$(BUILD)/libevent-src
+LIBEVENT_URL=https://github.com/libevent/libevent
+LIBEVENT_TAG=release-2.1.11-stable
+
+TOR_ROOT=$(BUILD)/tor-src
+TOR_URL=https://git.torproject.org/tor.git
+TOR_TAG=tor-0.4.2.6
+
+TOR_BIN=$(BUILD)/tor/tor
+
+SSL_ROOT=$(BUILD)/openssl-src
+SSL_URL=https://github.com/openssl/openssl
+SSL_TAG=OpenSSL_1_1_1-stable
+
+all: tor
+
+$(SSL_ROOT):
+	git clone $(SSL_URL) -b $(SSL_TAG) '$(SSL_ROOT)'
+
+$(LIBEVENT_ROOT): 
+	git clone $(LIBEVENT_URL) -b $(LIBEVENT_TAG) '$(LIBEVENT_ROOT)'
+
+$(TOR_ROOT):
+	git clone $(TOR_URL) -b $(TOR_TAG) '$(TOR_ROOT)'
+
+ssl-build: $(SSL_ROOT)
+	cd '$(SSL_ROOT)' && '$(SSL_ROOT)/config' no-shared --prefix='$(PREFIX)' --openssldir='$(PREFIX)/ssl'
+	$(MAKE) -C '$(SSL_ROOT)' depend
+	$(MAKE) -C '$(SSL_ROOT)' install
+
+event-build: $(LIBEVENT_ROOT) 
+	cd '$(LIBEVENT_ROOT)' && '$(LIBEVENT_ROOT)/autogen.sh' --prefix='$(PREFIX)' && '$(LIBEVENT_ROOT)/configure' --prefix='$(PREFIX)' --enable-shared=no --enable-static=yes --disable-openssl
+	$(MAKE) -C '$(LIBEVENT_ROOT)' install
+
+tor-build-src: $(TOR_ROOT) ssl-build event-build
+	cd '$(TOR_ROOT)' && PKG_CONFIG_PATH='$(PREFIX)/lib/pkgconfig' '$(TOR_ROOT)/autogen.sh' --prefix='$(BUILD)' && '$(TOR_ROOT)/configure' --prefix='$(PREFIX)' --disable-asciidoc --with-openssl-dir='$(PREFIX)/ssl'
+	$(MAKE) -C '$(TOR_ROOT)'
+
+$(TOR_BIN): tor-build-src
+	rm -fr '$(BUILD_ROOT)/tor'
+	mkdir '$(BUILD_ROOT)/tor'
+	cp '$(TOR_ROOT)/src/app/tor' '$(TOR_BIN)'
+
+tor-build: $(TOR_BIN)
+
+
+clean:
+	rm -rf '$(BUILD)'
