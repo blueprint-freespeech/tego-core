@@ -16,7 +16,7 @@ SSL_ROOT=$(BUILD)/openssl-src
 SSL_URL=https://github.com/openssl/openssl
 SSL_TAG=OpenSSL_1_1_1-stable
 
-all: tor
+all: tor-build
 
 $(SSL_ROOT):
 	git clone $(SSL_URL) -b $(SSL_TAG) '$(SSL_ROOT)'
