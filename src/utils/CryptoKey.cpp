@@ -575,7 +575,7 @@ bool CryptoKey::verifySHA256(const QByteArray &digest, QByteArray signature) con
     } else if (this->keyType == V3ServiceID) {
         //call verifying function for v3 keys
         result = ed25519_sign_open(reinterpret_cast<const uchar*>(digest.constData()), digest.size(),
-                                   reinterpret_cast<const uchar*>(v3publicKey.c_str()),
+                                   reinterpret_cast<const uchar*>(v3EncodedKeyString.c_str()),
                                    reinterpret_cast<const uchar*>(signature.constData())) != -1;
     }
     else {

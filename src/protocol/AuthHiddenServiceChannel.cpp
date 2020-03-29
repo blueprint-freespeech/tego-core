@@ -216,7 +216,7 @@ void AuthHiddenServiceChannel::sendAuthMessage()
 
     // get the public key
     //todo auth check here to see if the key is a v3 service id, to get the v3 public key
-    const auto publicKey = d->v3serviceID.getV3ServiceId();
+    const auto publicKey = d->v3serviceID.getV3serviceID();
     if (publicKey.size() > 150) {
         BUG() << "Unexpected size for encoded public key";
         closeChannel();
