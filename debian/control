@@ -2,15 +2,16 @@ Source: ricochet-refresh
 Section: net
 Priority: optional
 Maintainer: Jason Rhinelander <jason@imaginary.ca>
-Build-Depends: debhelper (>= 9), libprotobuf-dev, protobuf-compiler, qtdeclarative5-dev, qttools5-dev-tools
+Build-Depends: debhelper (>= 9), pkg-config, libssl-dev, libprotobuf-dev, protobuf-compiler, qtdeclarative5-dev, qttools5-dev-tools
 Standards-Version: 4.4.1
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Browser: https://salsa.debian.org/debian/ricochet-refresh
-#Vcs-Git: https://salsa.debian.org/debian/ricochet-refresh.git
+Homepage: https://ricochetrefresh.net/
 
 Package: ricochet-refresh
 Architecture: any
 Depends: tor, ${shlibs:Depends}, ${misc:Depends},
-    qml-module-qtgraphicaleffects
+    qml-module-qtgraphicaleffects,
+    qml-module-qtquick-controls,
+    qml-module-qtquick-layouts,
+    qml-module-qtquick-dialogs
 Description: Ricochet refresh
  Ricochet refresh
