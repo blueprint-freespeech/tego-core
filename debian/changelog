@@ -1,3 +1,9 @@
+ricochet-refresh (1.1.4-2) unstable; urgency=medium
+
+  * add desktop file and resized icons
+
+ -- Jason Rhinelander <jason@imaginary.ca>  Tue, 31 Mar 2020 16:36:49 -0300
+
 ricochet-refresh (1.1.4-1) unstable; urgency=medium
 
   * deb package

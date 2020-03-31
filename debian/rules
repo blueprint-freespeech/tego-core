@@ -21,9 +21,11 @@ export QT_SELECT=qt5
 override_dh_auto_configure:
 	dh_auto_configure -- DEFINES+=RICOCHET_NO_PORTABLE
 
-
-# dh_make generated override targets
-# This is example for Cmake (See https://bugs.debian.org/641051 )
-#override_dh_auto_configure:
-#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
-
+override_dh_auto_install:
+	dh_auto_install
+	./debian/make-icons.sh
+	# Remove the images that `make install` installs: the 1517x1517 png gets installed into 48x48
+	# is just wrong, and the "scalable" svg file is actually just the same PNG stuffed into
+	# an svg file because, um.
+	rm -f debian/ricochet-refresh/usr/share/icons/hicolor/48x48/apps/ricochet_refresh.png
+	rm -f debian/ricochet-refresh/usr/share/icons/hicolor/scalable/apps/ricochet_refresh.svg
