@@ -1,0 +1,13 @@
+debian/ricochet-refresh.desktop usr/share/applications
+debian/icons/1024x1024/ricochet-refresh.png usr/share/icons/hicolor/1024x1024/apps
+debian/icons/512x512/ricochet-refresh.png usr/share/icons/hicolor/512x512/apps
+debian/icons/256x256/ricochet-refresh.png usr/share/icons/hicolor/256x256/apps
+debian/icons/192x192/ricochet-refresh.png usr/share/icons/hicolor/192x192/apps
+debian/icons/128x128/ricochet-refresh.png usr/share/icons/hicolor/128x128/apps
+debian/icons/96x96/ricochet-refresh.png usr/share/icons/hicolor/96x96/apps
+debian/icons/64x64/ricochet-refresh.png usr/share/icons/hicolor/64x64/apps
+debian/icons/48x48/ricochet-refresh.png usr/share/icons/hicolor/48x48/apps
+debian/icons/32x32/ricochet-refresh.png usr/share/icons/hicolor/32x32/apps
+debian/icons/24x24/ricochet-refresh.png usr/share/icons/hicolor/24x24/apps
+debian/icons/16x16/ricochet-refresh.png usr/share/icons/hicolor/16x16/apps
+
