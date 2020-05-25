@@ -31,6 +31,7 @@ config.tests/*/*
 !config.tests/*/*.cpp
 !config.tests/*/*.h
 ricochet
+ricochet-refresh
 build-tests*
 buildscripts/src/ricochet-refresh
 buildscripts/output
