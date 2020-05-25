@@ -204,7 +204,6 @@ HEADERS += src/ui/MainWindow.h \
 #    lib/onion_ed25519_signature/ed25519-donna.h \
 #    lib/onion_ed25519_signature/ed25519-hash.h \
 #    lib/onion_ed25519_signature/modm-donna-64bit.h \
-#    lib/onion_ed25519_signature/orconfig.h \
     lib/onion_ed25519_signature/sign.h \
     src/ui/ContactsModel.h \
     src/tor/TorControl.h \

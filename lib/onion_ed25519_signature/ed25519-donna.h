@@ -10,7 +10,6 @@
 
 
 #include "ed25519-donna-portable.h"
-#include "orconfig.h"
 
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS
 /* Some of the ASM here is very long strings. */

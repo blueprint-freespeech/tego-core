@@ -147,7 +147,6 @@ set(HEADERS src/protocol/Channel.h
         lib/onion_ed25519_signature/ed25519-donna-portable-identify.h
         lib/onion_ed25519_signature/ed25519-hash.h
         lib/onion_ed25519_signature/modm-donna-64bit.h
-        lib/onion_ed25519_signature/orconfig.h
         ${PROTO_HDR}
         )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src ${Protobuf_INCLUDE_DIRS} ${QT5_DIR})
