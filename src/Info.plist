@@ -9,11 +9,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>rref</string>
 	<key>CFBundleExecutable</key>
 	<string>ricochet-refresh</string>
 	<key>CFBundleIdentifier</key>
-	<string>im.ricochet</string>
+	<string>net.blueprintforfreespeech.ricochet-refresh</string>
 	<key>CFBundleName</key>
 	<string>Ricochet-Refresh</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
