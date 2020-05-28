@@ -212,7 +212,7 @@ ed25519_hash_final(ed25519_hash_context *ctx, uint8_t *hash) {
 
 static void
 ed25519_hash(uint8_t *hash, const uint8_t *in, size_t inlen) {
-	SHA512(in, inlen, hash);	
+	SHA512(in, inlen, hash);
 }
 
 #endif
