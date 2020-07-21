@@ -40,5 +40,7 @@ moc_predefs.h
 \.vscode/c_cpp_properties\.json
 \.vscode/
 notes/*
-
 ricochet-refresh
+deploy.sh
+friend/*
+ricochet.log
