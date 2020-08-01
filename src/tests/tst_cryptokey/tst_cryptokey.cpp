@@ -144,9 +144,9 @@ void TestCryptoKey::load_ed25519()
 {
     CryptoKey key;
 
-    /* XXX: Are 384 and 352 the correct bit sizes for ED25519 private and public keys respectively? */
-    TEST_LOAD_PRIV_KEY(key, carol, 384, CryptoKey::KeyFormat::PEM);
-    TEST_LOAD_PUB_KEY(key, dave, 352, CryptoKey::KeyFormat::PEM);
+    /* XXX: Is 256 the correct bit size for both ED25519 private and public keys? */
+    TEST_LOAD_PRIV_KEY(key, carol, 256, CryptoKey::KeyFormat::PEM);
+    TEST_LOAD_PUB_KEY(key, dave, 256, CryptoKey::KeyFormat::PEM);
     TEST_LOAD_INV_KEY(key, carol, CryptoKey::PrivateKey, CryptoKey::KeyFormat::PEM);
 }
 
