@@ -46,6 +46,7 @@ class TestCryptoKey : public QObject
 
 private slots:
     void load();
+    void load_ed25519();
     void publicKeyDigest();
     void encodedPublicKey();
     void encodedPrivateKey();
@@ -83,24 +84,49 @@ const char *bob =
 const char *bobDigest = "b4780cabdfc3593004431644977cf73bf8475848";
 const char *bobTorID = "wr4azk67ynmtabcd";
 
+const char *carol =
+    "-----BEGIN PRIVATE KEY-----\n"
+    "MC4CAQAwBQYDK2VwBCIEIFvebLbidItfGDL5xIj78rQowiSfUC3+nu31EsrJP1+9\n"
+    "-----END PRIVATE KEY-----\n";
+
+const char *dave =
+    "-----BEGIN PUBLIC KEY-----\n"
+    "MCowBQYDK2VwAyEAl4OgT6eyg+0TfRaqu3THormgnIpBV2mrcrc8vl52Fcg=\n"
+    "-----END PUBLIC KEY-----\n";
+
+#define TEST_LOAD_PRIV_KEY(k, d, b, f)                                      \
+    QVERIFY(!k.isLoaded());                                                 \
+    QVERIFY(k.loadFromData(d, CryptoKey::PrivateKey, f));                   \
+    QVERIFY(k.isLoaded());                                                  \
+    QVERIFY(k.isPrivate());                                                 \
+    QCOMPARE(k.bits(), b);                                                  \
+    k.clear();                                                              \
+    QVERIFY(!k.isLoaded());
+
+#define TEST_LOAD_PUB_KEY(k, d, b, f)                                       \
+    QVERIFY(!k.isLoaded());                                                 \
+    QVERIFY(k.loadFromData(d, CryptoKey::PublicKey, f));                    \
+    QVERIFY(k.isLoaded());                                                  \
+    QVERIFY(!k.isPrivate());                                                \
+    QCOMPARE(k.bits(), b);                                                  \
+    k.clear();                                                              \
+    QVERIFY(!k.isLoaded());
+
+#define TEST_LOAD_INV_KEY(k, d, t, f)                                    \
+    QVERIFY(!k.isLoaded());                                                 \
+    QVERIFY(!k.loadFromData(std::string(d).substr(0, 8).c_str(), t, f));    \
+    QVERIFY(!k.isLoaded());                                                 \
+    QVERIFY(!k.loadFromData("", CryptoKey::PublicKey));                     \
+    QVERIFY(!k.isLoaded());
+
 void TestCryptoKey::load()
 {
     CryptoKey key;
     QVERIFY(!key.isLoaded());
 
-    // Private key
-    QVERIFY(key.loadFromData(alice, CryptoKey::PrivateKey));
-    QVERIFY(key.isLoaded());
-    QVERIFY(key.isPrivate());
-    QCOMPARE(key.bits(), 1024);
-    key.clear();
-    QVERIFY(!key.isLoaded());
-
-    // Public key
-    QVERIFY(key.loadFromData(bob, CryptoKey::PublicKey));
-    QVERIFY(key.isLoaded());
-    QVERIFY(!key.isPrivate());
-    QCOMPARE(key.bits(), 1024);
+    TEST_LOAD_PRIV_KEY(key, alice, 1024, CryptoKey::KeyFormat::PEM);
+    TEST_LOAD_PUB_KEY(key, bob, 1024, CryptoKey::KeyFormat::PEM);
+    TEST_LOAD_INV_KEY(key, alice, CryptoKey::PrivateKey, CryptoKey::KeyFormat::PEM);
 
     // DER public key
     QByteArray derEncoded = key.encodedPublicKey(CryptoKey::DER);
@@ -109,17 +135,19 @@ void TestCryptoKey::load()
     QCOMPARE(key.encodedPublicKey(CryptoKey::DER), derEncoded);
     key.clear();
 
-    // Invalid key
-    QVERIFY(!key.loadFromData(QByteArray(alice).mid(0, 150), CryptoKey::PrivateKey));
-    QVERIFY(!key.isLoaded());
-
     // Invalid DER key
     QVERIFY(!key.loadFromData(derEncoded.mid(0, derEncoded.size()-2), CryptoKey::PublicKey, CryptoKey::DER));
     QVERIFY(!key.isLoaded());
+}
 
-    // Empty key
-    QVERIFY(!key.loadFromData("", CryptoKey::PublicKey));
-    QVERIFY(!key.isLoaded());
+void TestCryptoKey::load_ed25519()
+{
+    CryptoKey key;
+
+    /* XXX: Is 256 the correct bit size for both ED25519 private and public keys? */
+    TEST_LOAD_PRIV_KEY(key, carol, 256, CryptoKey::KeyFormat::PEM);
+    TEST_LOAD_PUB_KEY(key, dave, 256, CryptoKey::KeyFormat::PEM);
+    TEST_LOAD_INV_KEY(key, carol, CryptoKey::PrivateKey, CryptoKey::KeyFormat::PEM);
 }
 
 void TestCryptoKey::publicKeyDigest()
